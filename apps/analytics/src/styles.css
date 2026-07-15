@@ -1,0 +1,206 @@
+@import '@mission/tokens/tokens.css';
+
+/* Analytics remote — every color goes through @mission/tokens. */
+
+.analytics-root {
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+}
+
+.mc-remote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--mc-space-4);
+  flex-wrap: wrap;
+}
+
+.mc-remote-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.mc-muted {
+  color: var(--mc-text-muted);
+  font-size: 0.85rem;
+}
+
+.mc-tabs {
+  display: flex;
+  gap: var(--mc-space-2);
+}
+
+.mc-tab {
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-radius: var(--mc-radius-sm);
+  color: var(--mc-text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.mc-tab:hover {
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+}
+
+.mc-tab-active {
+  background: var(--mc-primary-soft);
+  color: var(--mc-primary);
+  font-weight: 600;
+}
+
+.mc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+}
+
+.mc-card {
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4);
+  box-shadow: var(--mc-shadow);
+}
+
+.mc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--mc-space-3);
+}
+
+.mc-card-header h2,
+.mc-card h2,
+.mc-card h3 {
+  margin: 0 0 var(--mc-space-2);
+  font-size: 1.05rem;
+}
+
+.mc-monaco {
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-sm);
+  overflow: hidden;
+}
+
+.mc-btn {
+  border: 1px solid var(--mc-border);
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+  border-radius: var(--mc-radius-sm);
+  padding: var(--mc-space-2) var(--mc-space-4);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.mc-btn-primary {
+  background: var(--mc-primary);
+  border-color: var(--mc-primary);
+  color: var(--mc-primary-contrast);
+  font-weight: 600;
+}
+
+.mc-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.mc-badge {
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-radius: var(--mc-radius-sm);
+  font-size: 0.85rem;
+  border: 1px solid var(--mc-border);
+  background: var(--mc-surface-raised);
+}
+
+.mc-badge-success {
+  background: var(--mc-success-soft);
+  color: var(--mc-success);
+  border-color: transparent;
+}
+
+.mc-badge-info {
+  background: var(--mc-primary-soft);
+  color: var(--mc-primary);
+  border-color: transparent;
+}
+
+.mc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.mc-table th,
+.mc-table td {
+  text-align: left;
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-bottom: 1px solid var(--mc-border);
+}
+
+.mc-table th {
+  color: var(--mc-text-muted);
+  font-weight: 600;
+}
+
+.mc-status {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  background: var(--mc-surface-sunken);
+}
+
+.mc-status-nominal {
+  color: var(--mc-success);
+}
+
+.mc-status-degraded {
+  color: var(--mc-warn);
+}
+
+.mc-status-critical {
+  color: var(--mc-danger);
+}
+
+.mc-kpis {
+  display: flex;
+  gap: var(--mc-space-4);
+  flex-wrap: wrap;
+  margin: var(--mc-space-3) 0;
+}
+
+.mc-kpi {
+  background: var(--mc-surface-sunken);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-3) var(--mc-space-4);
+  display: flex;
+  flex-direction: column;
+  min-width: 90px;
+}
+
+.mc-kpi-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--mc-primary);
+}
+
+.mc-kpi-label {
+  color: var(--mc-text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mc-denied h2 {
+  color: var(--mc-danger);
+}
+
+/* Standalone-dev page background (harmless inside the shell). */
+body {
+  margin: 0;
+  background: var(--mc-bg);
+  padding: var(--mc-space-4);
+}
