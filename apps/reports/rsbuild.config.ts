@@ -2,18 +2,6 @@ import { createConfig } from '@nx/angular-rsbuild';
 import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 
 /**
- * monaco-editor's ESM build ships a dead AMD fallback in
- * editorSimpleWorker.js (`if (!isESM) require([moduleId], ...)`) that
- * Rspack cannot statically analyse. `isESM` is always true in this build,
- * so the branch never executes — the "Critical dependency" warning is
- * noise. Suppress it for monaco modules only.
- */
-const monacoDeadAmdRequireWarning = (warning: Error & { module?: { resource?: string } }): boolean =>
-  /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/.test(
-    warning.message,
-  ) && /monaco-editor/.test(warning.module?.resource ?? '');
-
-/**
  * reports — Angular 20 remote (port 4203).
  *
  * Exposes './routes' (an Angular Routes array) that the shell lazy-loads
@@ -62,7 +50,16 @@ export default () =>
     ],
     tools: {
       rspack: {
-        ignoreWarnings: [monacoDeadAmdRequireWarning],
+        ignoreWarnings: [
+        // monaco-editor's ESM build ships a dead AMD fallback in
+        // editorSimpleWorker.js (`if (!isESM) require([moduleId], ...)`).
+        // isESM is always true in this build, so the branch never executes —
+        // the "Critical dependency" warning is noise. Monaco modules only.
+        {
+          message: /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
+          module: /monaco-editor/,
+        },
+      ],
       },
     },
     server: {
