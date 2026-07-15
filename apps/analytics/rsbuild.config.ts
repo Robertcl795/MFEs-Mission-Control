@@ -14,6 +14,9 @@ export default defineConfig({
     pluginReact(),
     pluginModuleFederation({
       name: 'analytics',
+        // POC: remote types are hand-declared (remotes.d.ts); generated
+        // @mf-types churn re-triggers the dev watcher and causes HMR loops.
+        dts: false,
       exposes: {
         './mount': './src/mount.tsx',
       },
@@ -28,6 +31,11 @@ export default defineConfig({
       },
     }),
   ],
+  source: {
+    // Standalone-dev entry (async boundary → ./bootstrap). When federated,
+    // the shell ignores this and loads the exposed './mount' module.
+    entry: { index: './src/main.tsx' },
+  },
   server: {
     port: 4201,
     cors: true,
