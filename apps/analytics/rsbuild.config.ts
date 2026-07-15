@@ -3,6 +3,18 @@ import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 
 /**
+ * monaco-editor's ESM build ships a dead AMD fallback in
+ * editorSimpleWorker.js (`if (!isESM) require([moduleId], ...)`) that
+ * Rspack cannot statically analyse. `isESM` is always true in this build,
+ * so the branch never executes — the "Critical dependency" warning is
+ * noise. Suppress it for monaco modules only.
+ */
+const monacoDeadAmdRequireWarning = (warning: Error & { module?: { resource?: string } }): boolean =>
+  /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/.test(
+    warning.message,
+  ) && /monaco-editor/.test(warning.module?.resource ?? '');
+
+/**
  * analytics — React 19 remote (port 4201).
  *
  * Exposes a framework-agnostic `mount(el, options)` so the Angular shell
@@ -35,6 +47,11 @@ export default defineConfig({
     // Standalone-dev entry (async boundary → ./bootstrap). When federated,
     // the shell ignores this and loads the exposed './mount' module.
     entry: { index: './src/main.tsx' },
+  },
+  tools: {
+    rspack: {
+      ignoreWarnings: [monacoDeadAmdRequireWarning],
+    },
   },
   server: {
     port: 4201,
