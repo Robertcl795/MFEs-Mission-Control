@@ -1,0 +1,28 @@
+{
+  "name": "analytics",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mission Control remote: React 19 query workbench (port 4201).",
+  "scripts": {
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mission/bridge": "workspace:*",
+    "@mission/tokens": "workspace:*",
+    "monaco-editor": "^0.52.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.0"
+  },
+  "devDependencies": {
+    "@module-federation/rsbuild-plugin": "^2.7.0",
+    "@rsbuild/core": "~1.7.6",
+    "@rsbuild/plugin-react": "^1.4.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "~5.7.2"
+  }
+}

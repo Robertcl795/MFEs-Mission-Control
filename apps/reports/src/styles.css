@@ -1,0 +1,242 @@
+@import '@mission/tokens/tokens.css';
+
+/* Reports remote — all colors flow from @mission/tokens. */
+
+.mcr-root {
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+}
+
+.mcr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--mc-space-4);
+  flex-wrap: wrap;
+}
+
+.mcr-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.mcr-muted {
+  color: var(--mc-text-muted);
+  font-size: 0.85rem;
+}
+
+.mcr-tabs {
+  display: flex;
+  gap: var(--mc-space-2);
+}
+
+.mcr-tab {
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-radius: var(--mc-radius-sm);
+  color: var(--mc-text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.mcr-tab:hover {
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+}
+
+.mcr-tab-active {
+  background: var(--mc-primary-soft);
+  color: var(--mc-primary);
+  font-weight: 600;
+}
+
+.mcr-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+}
+
+.mcr-card {
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4);
+  box-shadow: var(--mc-shadow);
+}
+
+.mcr-card h2,
+.mcr-card h3 {
+  margin: 0 0 var(--mc-space-2);
+  font-size: 1.05rem;
+}
+
+.mcr-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--mc-space-3);
+}
+
+.mcr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--mc-space-3);
+}
+
+.mcr-tile {
+  display: block;
+  background: var(--mc-surface-sunken);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-3) var(--mc-space-4);
+  text-decoration: none;
+  color: var(--mc-text);
+}
+
+.mcr-tile:hover {
+  border-color: var(--mc-primary);
+}
+
+.mcr-tile h3 {
+  margin: 0 0 var(--mc-space-1);
+  color: var(--mc-primary);
+  font-size: 0.95rem;
+}
+
+.mcr-tile p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--mc-text-muted);
+}
+
+.mcr-btn {
+  border: 1px solid var(--mc-border);
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+  border-radius: var(--mc-radius-sm);
+  padding: var(--mc-space-2) var(--mc-space-4);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.mcr-btn-primary {
+  background: var(--mc-primary);
+  border-color: var(--mc-primary);
+  color: var(--mc-primary-contrast);
+  font-weight: 600;
+}
+
+.mcr-badge {
+  display: inline-block;
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-radius: var(--mc-radius-sm);
+  font-size: 0.85rem;
+  background: var(--mc-primary-soft);
+  color: var(--mc-primary);
+  margin-bottom: var(--mc-space-3);
+}
+
+.mcr-badge-success {
+  background: var(--mc-success-soft);
+  color: var(--mc-success);
+}
+
+.mcr-manifest {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mc-font-mono);
+  font-size: 0.82rem;
+}
+
+.mcr-manifest li {
+  padding: var(--mc-space-1) 0;
+  border-bottom: 1px dashed var(--mc-border);
+}
+
+.mcr-manifest strong {
+  display: inline-block;
+  min-width: 90px;
+  color: var(--mc-accent);
+}
+
+.mcr-task {
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-3);
+  margin-bottom: var(--mc-space-3);
+}
+
+.mcr-task-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--mc-space-2);
+  font-size: 0.9rem;
+}
+
+.mcr-task-title code {
+  color: var(--mc-text-muted);
+  font-size: 0.78rem;
+}
+
+.mcr-task-status {
+  font-size: 0.78rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--mc-surface-sunken);
+}
+
+.mcr-task-running {
+  color: var(--mc-warn);
+}
+
+.mcr-task-completed {
+  color: var(--mc-success);
+}
+
+.mcr-task-failed,
+.mcr-task-cancelled {
+  color: var(--mc-danger);
+}
+
+.mcr-progress {
+  height: 6px;
+  background: var(--mc-surface-sunken);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: var(--mc-space-2);
+}
+
+.mcr-progress-bar {
+  height: 100%;
+  background: var(--mc-primary);
+  transition: width 0.4s ease;
+}
+
+.mcr-task-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.mcr-task-foot a {
+  color: var(--mc-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Standalone-dev harness chrome (inert inside the shell). */
+body {
+  margin: 0;
+  background: var(--mc-bg);
+}
+
+.mcr-standalone {
+  padding: var(--mc-space-5);
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+}

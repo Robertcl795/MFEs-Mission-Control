@@ -1,0 +1,361 @@
+@import '@mission/tokens/tokens.css';
+
+/* Shell chrome — layout and global UI only. Feature styling lives in remotes. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--mc-font-body);
+  background: var(--mc-bg);
+  color: var(--mc-text);
+}
+
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-header {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-5);
+  padding: var(--mc-space-3) var(--mc-space-5);
+  background: var(--mc-surface);
+  border-bottom: 1px solid var(--mc-border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--mc-space-2);
+}
+
+.brand-mark {
+  color: var(--mc-primary);
+  font-size: 1.2rem;
+}
+
+.brand-name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brand-tag {
+  font-size: 0.7rem;
+  color: var(--mc-text-muted);
+  border: 1px solid var(--mc-border);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.shell-nav {
+  display: flex;
+  gap: var(--mc-space-2);
+  flex: 1;
+}
+
+.shell-nav a {
+  color: var(--mc-text-muted);
+  text-decoration: none;
+  padding: var(--mc-space-2) var(--mc-space-3);
+  border-radius: var(--mc-radius-sm);
+  font-size: 0.92rem;
+}
+
+.shell-nav a:hover {
+  color: var(--mc-text);
+  background: var(--mc-surface-raised);
+}
+
+.shell-nav a.active {
+  color: var(--mc-primary);
+  background: var(--mc-primary-soft);
+  font-weight: 600;
+}
+
+.shell-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-3);
+}
+
+.admin-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-1);
+  font-size: 0.8rem;
+  color: var(--mc-text-muted);
+  cursor: pointer;
+}
+
+.theme-btn {
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-sm);
+  padding: var(--mc-space-2) var(--mc-space-3);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-2);
+  background: var(--mc-surface-raised);
+  border: 1px solid var(--mc-border);
+  border-radius: 999px;
+  padding: var(--mc-space-1) var(--mc-space-3);
+  font-size: 0.85rem;
+}
+
+.user-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mc-success);
+}
+
+.shell-main {
+  flex: 1;
+  padding: var(--mc-space-5);
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.shell-footer {
+  display: flex;
+  gap: var(--mc-space-5);
+  padding: var(--mc-space-2) var(--mc-space-5);
+  border-top: 1px solid var(--mc-border);
+  background: var(--mc-surface);
+  color: var(--mc-text-muted);
+  font-size: 0.78rem;
+}
+
+.footer-note {
+  margin-left: auto;
+}
+
+/* Dashboard */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-5);
+}
+
+.hero h1 {
+  margin: 0 0 var(--mc-space-2);
+}
+
+.hero p {
+  color: var(--mc-text-muted);
+  max-width: 720px;
+}
+
+.hero-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--mc-space-4);
+  margin-top: var(--mc-space-4);
+}
+
+.hero-card {
+  display: block;
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4);
+  text-decoration: none;
+  color: var(--mc-text);
+  box-shadow: var(--mc-shadow);
+  transition: transform 0.15s ease;
+}
+
+.hero-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--mc-primary);
+}
+
+.hero-card h3 {
+  margin: 0 0 var(--mc-space-1);
+  color: var(--mc-primary);
+}
+
+.hero-card p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.panel {
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4) var(--mc-space-5);
+  box-shadow: var(--mc-shadow);
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.muted {
+  color: var(--mc-text-muted);
+  font-size: 0.85rem;
+}
+
+.demo-list li {
+  margin-bottom: var(--mc-space-2);
+  line-height: 1.5;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mc-success);
+  margin-left: var(--mc-space-1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.bus-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.82rem;
+  font-family: var(--mc-font-mono);
+}
+
+.bus-log li {
+  display: flex;
+  gap: var(--mc-space-3);
+  padding: var(--mc-space-1) 0;
+  border-bottom: 1px dashed var(--mc-border);
+  align-items: baseline;
+}
+
+.bus-time {
+  color: var(--mc-text-muted);
+  white-space: nowrap;
+}
+
+.bus-event {
+  color: var(--mc-accent);
+  white-space: nowrap;
+}
+
+.bus-detail {
+  color: var(--mc-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Remote outlets */
+.remote-outlet {
+  min-height: 200px;
+}
+
+.remote-loading {
+  color: var(--mc-text-muted);
+}
+
+.remote-error {
+  border: 1px solid var(--mc-danger);
+  background: var(--mc-danger-soft);
+  color: var(--mc-danger);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4);
+}
+
+.remote-error-hint {
+  font-size: 0.85rem;
+}
+
+.forbidden h1 {
+  color: var(--mc-danger);
+}
+
+.forbidden a {
+  color: var(--mc-primary);
+}
+
+/* Toasts */
+.toast-stack {
+  position: fixed;
+  right: var(--mc-space-5);
+  bottom: var(--mc-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-3);
+  z-index: 100;
+  max-width: 360px;
+}
+
+.toast {
+  position: relative;
+  background: var(--mc-surface-raised);
+  border: 1px solid var(--mc-border);
+  border-left: 4px solid var(--mc-primary);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-3) var(--mc-space-5) var(--mc-space-3) var(--mc-space-4);
+  box-shadow: var(--mc-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-1);
+  font-size: 0.9rem;
+}
+
+.toast-success {
+  border-left-color: var(--mc-success);
+}
+
+.toast-error {
+  border-left-color: var(--mc-danger);
+}
+
+.toast-clickable {
+  cursor: pointer;
+}
+
+.toast-clickable:hover {
+  border-color: var(--mc-primary);
+}
+
+.toast-message {
+  color: var(--mc-text-muted);
+  font-size: 0.82rem;
+}
+
+.toast-action {
+  color: var(--mc-primary);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.toast-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--mc-text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+}
