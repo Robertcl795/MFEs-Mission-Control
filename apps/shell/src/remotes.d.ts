@@ -12,6 +12,15 @@ declare module 'analytics/mount' {
   export default mount;
 }
 
+declare module 'designer/mount' {
+  export interface MountOptions {
+    basename?: string;
+  }
+  export type UnmountFn = () => void;
+  export function mount(element: HTMLElement, options?: MountOptions): UnmountFn;
+  export default mount;
+}
+
 declare module 'reports/routes' {
   import type { Routes } from '@angular/router';
   export const REPORTS_ROUTES: Routes;

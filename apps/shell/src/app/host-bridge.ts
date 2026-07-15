@@ -32,7 +32,7 @@ export function initHostBridge(): MissionBridge {
       name: 'Nova Ryder',
       email: 'nova.ryder@mission.local',
       roles: ['operator'],
-      permissions: ['analytics:view', 'analytics:query', 'reports:view', 'reports:generate'],
+      permissions: ['analytics:view', 'analytics:query', 'reports:view', 'reports:generate', 'designer:edit'],
     },
     'poc-jwt-x9f2-not-a-real-token',
   );

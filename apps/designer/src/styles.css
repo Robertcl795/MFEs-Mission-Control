@@ -1,0 +1,132 @@
+/* Designer remote chrome — colors flow from @mission/tokens.
+   Component-level styling lives in each .svelte file's scoped block. */
+
+.dsg-root {
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+}
+
+.dsg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--mc-space-4);
+  flex-wrap: wrap;
+}
+
+.dsg-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.dsg-muted {
+  color: var(--mc-text-muted);
+  font-size: 0.85rem;
+}
+
+.dsg-actions {
+  display: flex;
+  gap: var(--mc-space-2);
+}
+
+.dsg-btn {
+  border: 1px solid var(--mc-border);
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+  border-radius: var(--mc-radius-sm);
+  padding: var(--mc-space-2) var(--mc-space-4);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.dsg-btn-primary {
+  background: var(--mc-primary);
+  border-color: var(--mc-primary);
+  color: var(--mc-primary-contrast);
+  font-weight: 600;
+}
+
+.dsg-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.dsg-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: var(--mc-space-4);
+  align-items: start;
+}
+
+.dsg-card {
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4);
+  box-shadow: var(--mc-shadow);
+}
+
+.dsg-card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.dsg-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-3);
+  margin-bottom: var(--mc-space-3);
+}
+
+.dsg-tabs {
+  display: flex;
+  gap: var(--mc-space-1);
+  margin-left: auto;
+}
+
+.dsg-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--mc-radius-sm);
+  color: var(--mc-text-muted);
+  cursor: pointer;
+  font-family: var(--mc-font-mono);
+  font-size: 0.82rem;
+  padding: var(--mc-space-1) var(--mc-space-3);
+}
+
+.dsg-tab:hover {
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+}
+
+.dsg-tab-active {
+  background: var(--mc-primary-soft);
+  border-color: var(--mc-primary);
+  color: var(--mc-primary);
+  font-weight: 600;
+}
+
+.dsg-lang {
+  background: var(--mc-surface-sunken);
+  border-radius: 999px;
+  color: var(--mc-accent);
+  font-family: var(--mc-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+}
+
+.dsg-denied h2 {
+  color: var(--mc-danger);
+}
+
+/* Standalone-dev page background (inert inside the shell). */
+body {
+  margin: 0;
+  background: var(--mc-bg);
+  padding: var(--mc-space-4);
+}

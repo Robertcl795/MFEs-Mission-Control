@@ -26,6 +26,10 @@ interface BusLogEntry {
             <h3>Analytics</h3>
             <p>React 19 · Monaco query workbench · port 4201</p>
           </a>
+          <a routerLink="/designer" class="hero-card">
+            <h3>Designer</h3>
+            <p>Svelte 5 · Monaco CSS/HTML editor · sanitized live canvas · port 4202</p>
+          </a>
           <a routerLink="/reports" class="hero-card">
             <h3>Reports</h3>
             <p>Angular 20 · Monaco JSON viewer · persistent report generation · port 4203</p>
@@ -40,6 +44,7 @@ interface BusLogEntry {
           <li><strong>Persistent tasks:</strong> start a report in Reports → “Generate”, immediately navigate to Analytics. Polling continues in the host; a toast appears here when it finishes — click it to open the cached result.</li>
           <li><strong>Global theme:</strong> hit the theme button above. Both remotes — and every Monaco editor (React and Angular) — flip between <code>vs</code> and <code>vs-dark</code>.</li>
           <li><strong>Route guards:</strong> toggle <code>admin</code> in the header, then visit Reports → “Admin”. The same <code>@mission/bridge</code> validator guards the React admin tab.</li>
+          <li><strong>Sanitized canvas:</strong> in Designer (Svelte), edit <code>index.html</code>/<code>styles.css</code> — Monaco flips syntax per file, and the canvas renders the documents through DOMPurify + a CSS filter. “Insert fleet table” reuses the shared <code>fleet-data</code> cache entry.</li>
         </ol>
       </section>
 

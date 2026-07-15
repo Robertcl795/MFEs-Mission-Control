@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "types": ["@rsbuild/core/types"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "rsbuild.config.ts"]
+}
