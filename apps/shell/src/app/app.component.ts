@@ -20,6 +20,7 @@ import { ToastCenterComponent } from './toast/toast-center.component';
         <nav class="shell-nav">
           <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
           <a routerLink="/analytics" routerLinkActive="active">Analytics</a>
+          <a routerLink="/designer" routerLinkActive="active">Designer</a>
           <a routerLink="/reports" routerLinkActive="active">Reports</a>
         </nav>
         <div class="shell-controls">
@@ -45,7 +46,7 @@ import { ToastCenterComponent } from './toast/toast-center.component';
         <span>bridge v{{ bridgeVersion }}</span>
         <span>cache · {{ cacheKeys().length }} keys</span>
         <span>tasks · {{ runningTasks() }} running</span>
-        <span class="footer-note">host: shell (Angular 20) · remotes: analytics (React 19), reports (Angular 20)</span>
+        <span class="footer-note">host: shell (Angular 20) · remotes: analytics (React 19), designer (Svelte 5), reports (Angular 20)</span>
       </footer>
 
       <mc-toast-center />

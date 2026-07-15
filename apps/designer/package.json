@@ -1,0 +1,25 @@
+{
+  "name": "designer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mission Control remote: Svelte 5 HTML/CSS design canvas (port 4202). Monaco editor with CSS/HTML syntax switching + sanitized live preview.",
+  "scripts": {
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mission/bridge": "workspace:*",
+    "@mission/tokens": "workspace:*",
+    "dompurify": "^3.4.0",
+    "monaco-editor": "^0.52.2",
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "@module-federation/rsbuild-plugin": "^2.7.0",
+    "@rsbuild/core": "~1.7.6",
+    "@rsbuild/plugin-svelte": "^1.1.2",
+    "typescript": "~5.8.3"
+  }
+}

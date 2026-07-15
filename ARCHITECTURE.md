@@ -14,12 +14,17 @@ graph LR
     subgraph analytics["analytics · React 19 · :4201 (REMOTE)"]
         AM["exposes ./mount"]
     end
+    subgraph designer["designer · Svelte 5 · :4202 (REMOTE)"]
+        DM["exposes ./mount"]
+    end
     subgraph reports["reports · Angular 20 · :4203 (REMOTE)"]
         RR["exposes ./routes"]
     end
     RT -- "loadRemote('analytics/mount')" --> AM
+    RT -- "loadRemote('designer/mount')" --> DM
     RT -- "loadChildren: loadRemote('reports/routes')" --> RR
     AM -. "getBridge()" .-> BR
+    DM -. "getBridge()" .-> BR
     RR -. "getBridge()" .-> BR
 ```
 
@@ -35,6 +40,7 @@ graph LR
 | `@mission/bridge` | workspace (`requiredVersion: false`) | The contract itself. Identity is *additionally* anchored to `globalThis[Symbol.for('mission-control.bridge.v1')]`, so even a duplicated module copy resolves the same bridge. |
 | `@angular/*`, `rxjs` | `^20`, `^7.8` | shell + reports run in ONE Angular instance (federated routes require it). |
 | `react`, `react-dom` | `^19` | Future React remotes reuse analytics' copy. |
+| `svelte` | `^5` | Future Svelte remotes reuse designer's copy. |
 
 ## The bridge (`packages/bridge`)
 
@@ -53,7 +59,7 @@ graph LR
 ## Cross-framework routing
 
 - **reports (Angular → Angular):** exposes a `Routes` array; the shell lazy-loads it with `loadChildren`. Guards and route-level `provideHttpClient(withInterceptors(...))` travel with the routes.
-- **analytics (React in an Angular host):** exposes a framework-agnostic `mount(el, {basename}) => unmount`. The shell consumes it through a URL **matcher** that swallows `/analytics/**`, letting React Router (basename `/analytics`) own the sub-tree. The React adapter renders an inline access-denied panel for blocked routes; the Angular adapter redirects to the shell's `/forbidden`. Both consume the *same* validators.
+- **analytics (React) & designer (Svelte) in the Angular host:** both expose the framework-agnostic `mount(el, {basename}) => unmount` contract, consumed by ONE generic `RemoteMountOutletComponent` — the shell has no idea which framework renders inside. Each is mounted through a URL **matcher** that swallows `/analytics/**` / `/designer/**`. The React and Svelte adapters render an inline access-denied panel for blocked views; the Angular adapter redirects to the shell's `/forbidden`. All three consume the *same* bridge validators.
 
 ## Monaco strategy
 
@@ -62,7 +68,8 @@ graph LR
   ```ts
   new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url))
   ```
-  Each remote bundles its own worker chunks on its own origin (`apps/*/src/**/monaco*/setup.ts`) and handles both the base editor worker and the JSON worker, so `window.MonacoEnvironment` stays correct regardless of which remote installed it last.
+  Each remote bundles its own worker chunks on its own origin (`apps/*/src/**/monaco*setup.ts`) and handles every label it needs (base editor, JSON in reports/analytics, CSS + HTML in designer), so `window.MonacoEnvironment` stays correct regardless of which remote installed it last.
+- Multi-document editing (designer): ONE editor instance, one `ITextModel` per file — `editor.setModel()` swaps content, language services, syntax highlighting and undo stack in a single call.
 - Theme: components subscribe to `ThemeChannel` and call `monaco.editor.setTheme('vs' | 'vs-dark')` — global by design, one call restyles every editor in the federation.
 
 ## Build-system decisions (the sharp edges)
@@ -73,6 +80,10 @@ graph LR
 4. **zone.js is required** — the Angular-Rsbuild toolchain appends it to the browser polyfills unconditionally; zoneless bootstrap is not supported here.
 5. **MF DTS generation is disabled** (`dts: false`). Remote types are hand-declared in `apps/shell/src/remotes.d.ts`; the generated `@mf-types` churn re-triggers the dev watcher.
 6. **Dev `assetPrefix` is absolute** on remotes (`http://localhost:4201/`, `…4203/`) so federated chunks, CSS and worker files resolve against the remote's own origin when running inside the shell, with CORS enabled on the remote dev servers.
+
+## Untrusted content (designer canvas)
+
+Everything typed into the designer editor is treated as hostile. The render path is: editor → `sanitizeHtml` (DOMPurify: scripts, event handlers, dangerous URLs and embed/style/link/base/meta tags stripped) + `sanitizeCss` (comment-stripping first, then `@import` / `expression()` / `behavior:` / `javascript:` URL / style-breakout filters) → a **shadow root**, markup via `innerHTML`, CSS via a real style element's `textContent`. The shadow boundary keeps canvas styles from leaking into the shell; `@mission/tokens` custom properties intentionally pierce it so previews follow the global theme. The CSS filter is POC-grade — a production system would use a real CSS parser.
 
 ## Machine-readable manifests
 

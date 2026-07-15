@@ -6,6 +6,7 @@ A micro-frontend proof of concept built for the agentic era: **Module Federation
 | --- | --- | --- | --- |
 | `shell` | Angular 20 | 4200 | **Host.** Owns the bridge (session, theme, cache, tasks, events), layout, routing, global toasts. No feature logic. |
 | `analytics` | React 19 | 4201 | **Remote.** Monaco-powered SQL query workbench. Exposes `./mount`. |
+| `designer` | Svelte 5 | 4202 | **Remote.** Monaco CSS/HTML editor + sanitized live canvas (DOMPurify + CSS filter, shadow DOM). Exposes `./mount`. |
 | `reports` | Angular 20 | 4203 | **Remote.** Monaco JSON/log viewer + long-running report generation. Exposes `./routes`. |
 
 | Package | Purpose |
@@ -18,19 +19,20 @@ A micro-frontend proof of concept built for the agentic era: **Module Federation
 ```bash
 pnpm install
 pnpm build:contracts   # compile @mission/bridge (apps consume its dist)
-pnpm dev               # starts shell (4200), analytics (4201), reports (4203)
+pnpm dev               # starts shell (4200), analytics (4201), designer (4202), reports (4203)
 ```
 
-Open **http://localhost:4200**. Each remote also runs standalone (`http://localhost:4201`, `http://localhost:4203`) with a local dev bridge, honouring the exact same contracts.
+Open **http://localhost:4200**. Each remote also runs standalone (`http://localhost:4201`, `4202`, `4203`) with a local dev bridge, honouring the exact same contracts.
 
 `pnpm build` produces production bundles for every app (`apps/*/dist`), including each remote's `mf-manifest.json`.
 
-## The four demos
+## The five demos
 
 1. **Cross-remote cache (SWR).** Reports → *Data viewer* fetches `fleet-data` (~1.2s mock network). Then Analytics → *Run query*: served from the shared `DataCache` in single-digit ms — one network request for the whole federation, in-flight requests deduped.
 2. **Persistent tasks.** Reports → *Generate* starts a report job in the **host-owned** `TaskManager`, then navigate to Analytics mid-run. Polling keeps going; the shell raises a clickable toast on completion that deep-links to the result — served instantly from the cache.
 3. **Global theme.** The header toggle flips `data-theme` on `<html>`; both remotes subscribe to the bridge `ThemeChannel` and every Monaco editor (React *and* Angular) switches `vs` ⇄ `vs-dark` — they share one federated `monaco-editor` singleton (`^0.52.0`).
 4. **Shared route protection.** `requirePermission('admin')` from `@mission/bridge` guards `/reports/admin` (Angular `CanActivateFn` adapter) *and* `/analytics/admin` (React component adapter). Toggle `admin` in the header and watch both react live.
+5. **Sanitized design canvas.** Designer (Svelte 5) edits two documents — `index.html` and `styles.css` — in ONE Monaco instance that swaps models (and syntax highlighting) per file. Every keystroke passes through DOMPurify + a CSS filter before rendering into a shadow-DOM canvas; try typing a `<script>` tag and watch the sanitizer counter. "Insert fleet table" reuses the same `fleet-data` cache entry as the other remotes — still one network request federation-wide.
 
 ## Architectural rules
 
@@ -43,4 +45,6 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for contract-level detail, the federati
 
 ## Verification
 
-The POC was verified end-to-end with a Playwright smoke suite (19 checks: remote mounting, cache dedupe, Monaco theme propagation, guard allow/deny, task persistence + toast deep-link). All checks pass against the dev servers.
+The POC was verified end-to-end with a Playwright smoke suite (28 checks: remote mounting across three frameworks, cache dedupe, Monaco theme propagation, CSS/HTML model switching, live script-injection stripping, guard allow/deny, task persistence + toast deep-link). All checks pass against the dev servers.
+
+> **Why Svelte and not SvelteKit?** SvelteKit is bound to Vite and SSR-oriented routing, so it cannot join an Rspack/Rsbuild Module Federation build. The `designer` remote follows this repo's architecture instead: Svelte 5 compiled by Rsbuild, federated with the same `mount` contract as the React remote.

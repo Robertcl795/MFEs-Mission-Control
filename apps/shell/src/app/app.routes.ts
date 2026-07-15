@@ -1,20 +1,31 @@
 import type { Routes, UrlSegment } from '@angular/router';
 import { loadRemote } from '@module-federation/enhanced/runtime';
-import { AnalyticsOutletComponent } from './remotes/analytics-outlet.component';
+import { RemoteMountOutletComponent } from './remotes/remote-mount-outlet.component';
 import { DashboardComponent } from './pages/dashboard.component';
 import { ForbiddenComponent } from './pages/forbidden.component';
 
 /**
  * Host routing. The shell knows remotes ONLY by their federated entry
- * points ('analytics/mount', 'reports/routes') — never by their internals.
+ * points ('analytics/mount', 'designer/mount', 'reports/routes') — never
+ * by their internals.
  */
+const consumeAll = (prefix: string) => (segments: UrlSegment[]) =>
+  segments[0]?.path === prefix ? { consumed: segments } : null;
+
 export const APP_ROUTES: Routes = [
   { path: '', pathMatch: 'full', component: DashboardComponent },
   {
-    // Consume /analytics AND everything below it: the React remote owns its
-    // own sub-router (react-router with basename '/analytics').
-    matcher: (segments: UrlSegment[]) => (segments[0]?.path === 'analytics' ? { consumed: segments } : null),
-    component: AnalyticsOutletComponent,
+    // Consume /analytics and everything below it: the React remote owns
+    // its own sub-router (react-router with basename '/analytics').
+    matcher: consumeAll('analytics'),
+    component: RemoteMountOutletComponent,
+    data: { remote: 'analytics/mount', basename: '/analytics', label: 'Analytics', port: 4201 },
+  },
+  {
+    // Svelte remote — same framework-agnostic mount contract.
+    matcher: consumeAll('designer'),
+    component: RemoteMountOutletComponent,
+    data: { remote: 'designer/mount', basename: '/designer', label: 'Designer', port: 4202 },
   },
   {
     // Angular remote: federated Routes are lazy-loaded straight into the
