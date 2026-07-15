@@ -28,6 +28,9 @@ export default () =>
     plugins: [
       pluginModuleFederation({
         name: 'shell',
+        // POC: remote types are hand-declared (remotes.d.ts); generated
+        // @mf-types churn re-triggers the dev watcher and causes HMR loops.
+        dts: false,
         remotes: {
           analytics: 'analytics@http://localhost:4201/mf-manifest.json',
           reports: 'reports@http://localhost:4203/mf-manifest.json',

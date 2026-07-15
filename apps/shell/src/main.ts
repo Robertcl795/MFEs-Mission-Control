@@ -1,10 +1,8 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
-import { appConfig } from './app/app.config';
-import { initHostBridge } from './app/host-bridge';
-
-// The bridge MUST exist before Angular bootstraps and before any remote
-// loads — remotes resolve it synchronously via getBridge().
-initHostBridge();
-
-bootstrapApplication(AppComponent, appConfig).catch((err) => console.error('[shell] bootstrap failed', err));
+/**
+ * Async boundary — REQUIRED by Module Federation 2.0.
+ *
+ * Shared singletons (@angular/*, rxjs, @mission/bridge, monaco-editor) are
+ * negotiated at runtime; a dynamic import gives the federation runtime a
+ * chance to resolve the share scope before any shared module executes.
+ */
+void import('./bootstrap');

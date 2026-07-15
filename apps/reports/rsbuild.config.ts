@@ -27,6 +27,9 @@ export default () =>
     plugins: [
       pluginModuleFederation({
         name: 'reports',
+        // POC: remote types are hand-declared (remotes.d.ts); generated
+        // @mf-types churn re-triggers the dev watcher and causes HMR loops.
+        dts: false,
         exposes: {
           './routes': './src/app/remote-entry/routes.ts',
         },
