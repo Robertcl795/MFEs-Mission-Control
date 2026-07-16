@@ -33,7 +33,7 @@ export default () =>
         dts: false,
         remotes: {
           analytics: 'analytics@http://localhost:4201/mf-manifest.json',
-          designer: 'designer@http://localhost:4202/mf-manifest.json',
+          playground: 'playground@http://localhost:4204/mf-manifest.json',
           reports: 'reports@http://localhost:4203/mf-manifest.json',
         },
         shared: {

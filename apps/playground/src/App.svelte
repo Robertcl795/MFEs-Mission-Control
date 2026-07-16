@@ -6,15 +6,15 @@
   import { fleetTableHtml, isFleetDataCached, loadFleetData } from './lib/fleet';
 
   /**
-   * Designer remote root (Svelte 5). House rules apply:
+   * Playground remote root (Svelte 5). House rules apply:
    *  - session/theme/cache come from the bridge, never local state;
    *  - gating uses the SAME shared validators as the Angular and React remotes;
    *  - document state persists in the shared DataCache, so it survives
    *    navigating away to another remote and back.
    */
   const bridge = getBridge();
-  const FILES_KEY = 'designer:files';
-  const VALIDATOR = requirePermission('designer:edit');
+  const FILES_KEY = 'playground:files';
+  const VALIDATOR = requirePermission('playground:edit');
 
   const persisted = bridge.cache.peek(FILES_KEY);
   let files = $state({
@@ -23,13 +23,13 @@
   });
   let active = $state('html');
   let user = $state(bridge.session.user);
-  let decision = $state(evaluateRoute(VALIDATOR, bridge.session, '/designer'));
+  let decision = $state(evaluateRoute(VALIDATOR, bridge.session, '/playground'));
   let inserting = $state(false);
 
   $effect(() => {
     return bridge.session.subscribe((next) => {
       user = next;
-      decision = evaluateRoute(VALIDATOR, bridge.session, '/designer');
+      decision = evaluateRoute(VALIDATOR, bridge.session, '/playground');
     });
   });
 
@@ -66,61 +66,61 @@
   }
 </script>
 
-<div class="dsg-root" data-testid="designer-root">
-  <header class="dsg-header">
+<div class="pg-root" data-testid="playground-root">
+  <header class="pg-header">
     <div>
-      <h1>Designer</h1>
-      <p class="dsg-muted">Svelte 5 remote · signed in as {user?.name ?? 'anonymous'}</p>
+      <h1>Playground</h1>
+      <p class="pg-muted">Svelte 5 remote · signed in as {user?.name ?? 'anonymous'}</p>
     </div>
-    <div class="dsg-actions">
-      <button class="dsg-btn" onclick={resetFiles}>Reset files</button>
-      <button class="dsg-btn dsg-btn-primary" onclick={insertFleetTable} disabled={inserting} data-testid="insert-fleet">
+    <div class="pg-actions">
+      <button class="pg-btn" onclick={resetFiles}>Reset files</button>
+      <button class="pg-btn pg-btn-primary" onclick={insertFleetTable} disabled={inserting} data-testid="insert-fleet">
         {inserting ? 'Loading…' : 'Insert fleet table (shared cache)'}
       </button>
     </div>
   </header>
 
   {#if decision.allowed}
-    <div class="dsg-sections">
-      <section class="dsg-card">
-        <div class="dsg-card-head">
+    <div class="pg-sections">
+      <section class="pg-card">
+        <div class="pg-card-head">
           <h2>Editor</h2>
-          <nav class="dsg-tabs" aria-label="Files">
+          <nav class="pg-tabs" aria-label="Files">
             <button
-              class="dsg-tab"
-              class:dsg-tab-active={active === 'html'}
+              class="pg-tab"
+              class:pg-tab-active={active === 'html'}
               onclick={() => (active = 'html')}
               data-testid="file-tab-html"
             >
               index.html
             </button>
             <button
-              class="dsg-tab"
-              class:dsg-tab-active={active === 'css'}
+              class="pg-tab"
+              class:pg-tab-active={active === 'css'}
               onclick={() => (active = 'css')}
               data-testid="file-tab-css"
             >
               styles.css
             </button>
           </nav>
-          <span class="dsg-lang" data-testid="editor-lang">{active === 'html' ? 'HTML' : 'CSS'}</span>
+          <span class="pg-lang" data-testid="editor-lang">{active === 'html' ? 'HTML' : 'CSS'}</span>
         </div>
         <Editor html={files.html} css={files.css} {active} onchange={onFileChange} />
       </section>
 
-      <section class="dsg-card">
-        <div class="dsg-card-head">
+      <section class="pg-card">
+        <div class="pg-card-head">
           <h2>Canvas</h2>
-          <span class="dsg-muted">sanitized live preview · shadow DOM</span>
+          <span class="pg-muted">sanitized live preview · shadow DOM</span>
         </div>
         <Canvas html={files.html} css={files.css} />
       </section>
     </div>
   {:else}
-    <section class="dsg-card dsg-denied" data-testid="access-denied">
+    <section class="pg-card pg-denied" data-testid="access-denied">
       <h2>Access denied</h2>
-      <p>{decision.reason ?? 'You do not have permission to use the designer.'}</p>
-      <p class="dsg-muted">
+      <p>{decision.reason ?? 'You do not have permission to use the playground.'}</p>
+      <p class="pg-muted">
         Decision made by the same <code>@mission/bridge</code> validators that guard the Angular and React remotes.
       </p>
     </section>

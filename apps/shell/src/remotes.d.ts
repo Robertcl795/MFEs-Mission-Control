@@ -12,7 +12,7 @@ declare module 'analytics/mount' {
   export default mount;
 }
 
-declare module 'designer/mount' {
+declare module 'playground/mount' {
   export interface MountOptions {
     basename?: string;
   }

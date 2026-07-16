@@ -6,7 +6,7 @@ import { ForbiddenComponent } from './pages/forbidden.component';
 
 /**
  * Host routing. The shell knows remotes ONLY by their federated entry
- * points ('analytics/mount', 'designer/mount', 'reports/routes') — never
+ * points ('analytics/mount', 'playground/mount', 'reports/routes') — never
  * by their internals.
  */
 const consumeAll = (prefix: string) => (segments: UrlSegment[]) =>
@@ -23,9 +23,9 @@ export const APP_ROUTES: Routes = [
   },
   {
     // Svelte remote — same framework-agnostic mount contract.
-    matcher: consumeAll('designer'),
+    matcher: consumeAll('playground'),
     component: RemoteMountOutletComponent,
-    data: { remote: 'designer/mount', basename: '/designer', label: 'Designer', port: 4202 },
+    data: { remote: 'playground/mount', basename: '/playground', label: 'Playground', port: 4204 },
   },
   {
     // Angular remote: federated Routes are lazy-loaded straight into the

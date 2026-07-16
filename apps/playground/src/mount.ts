@@ -11,7 +11,7 @@ export interface MountOptions {
 export type UnmountFn = () => void;
 
 /**
- * Federated entry (`designer/mount`): the same framework-agnostic contract
+ * Federated entry (`playground/mount`): the same framework-agnostic contract
  * the React remote uses. The Angular shell never touches Svelte APIs — it
  * gets a mount function and an unmount handle, nothing more.
  */

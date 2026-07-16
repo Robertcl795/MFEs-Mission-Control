@@ -3,7 +3,7 @@ import { pluginSvelte } from '@rsbuild/plugin-svelte';
 import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 
 /**
- * designer — Svelte 5 remote (port 4202).
+ * playground — Svelte 5 remote (port 4204).
  *
  * A "SvelteKit-style" app federated the MFE way: SvelteKit itself is
  * Vite/SSR-bound and cannot join an Rspack federation, so this remote is
@@ -15,7 +15,7 @@ export default defineConfig({
   plugins: [
     pluginSvelte(),
     pluginModuleFederation({
-      name: 'designer',
+      name: 'playground',
       // POC: remote types are hand-declared (remotes.d.ts); generated
       // @mf-types churn re-triggers the dev watcher and causes HMR loops.
       dts: false,
@@ -50,17 +50,17 @@ export default defineConfig({
     },
   },
   server: {
-    port: 4202,
+    port: 4204,
     cors: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
   },
   dev: {
-    assetPrefix: 'http://localhost:4202/',
+    assetPrefix: 'http://localhost:4204/',
   },
   output: {
-    assetPrefix: 'http://localhost:4202/',
+    assetPrefix: 'http://localhost:4204/',
   },
   html: {
-    title: 'Designer — standalone dev',
+    title: 'Playground — standalone dev',
   },
 });

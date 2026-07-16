@@ -16,7 +16,7 @@ export type Permission =
   | 'analytics:query'
   | 'reports:view'
   | 'reports:generate'
-  | 'designer:edit'
+  | 'playground:edit'
   | 'admin'
   | (string & {});
 

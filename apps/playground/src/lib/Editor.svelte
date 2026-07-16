@@ -66,10 +66,10 @@
   });
 </script>
 
-<div class="dsg-monaco" bind:this={host} data-testid="designer-editor"></div>
+<div class="pg-monaco" bind:this={host} data-testid="playground-editor"></div>
 
 <style>
-  .dsg-monaco {
+  .pg-monaco {
     border: 1px solid var(--mc-border);
     border-radius: var(--mc-radius-sm);
     height: 420px;

@@ -17,7 +17,7 @@ interface MountModule {
 
 /**
  * Framework boundary for mount-contract remotes (React `analytics`, Svelte
- * `designer`, ...). The shell only knows `mount(el) → unmount()` — which
+ * `playground`, ...). The shell only knows `mount(el) → unmount()` — which
  * framework renders inside is the remote's business. Route `data` supplies:
  *   { remote: 'analytics/mount', basename: '/analytics', label: 'Analytics', port: 4201 }
  */

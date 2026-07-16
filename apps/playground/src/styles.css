@@ -1,7 +1,7 @@
-/* Designer remote chrome — colors flow from @mission/tokens.
+/* Playground remote chrome — colors flow from @mission/tokens.
    Component-level styling lives in each .svelte file's scoped block. */
 
-.dsg-root {
+.pg-root {
   font-family: var(--mc-font-body);
   color: var(--mc-text);
   display: flex;
@@ -9,7 +9,7 @@
   gap: var(--mc-space-4);
 }
 
-.dsg-header {
+.pg-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -17,22 +17,22 @@
   flex-wrap: wrap;
 }
 
-.dsg-header h1 {
+.pg-header h1 {
   margin: 0;
   font-size: 1.4rem;
 }
 
-.dsg-muted {
+.pg-muted {
   color: var(--mc-text-muted);
   font-size: 0.85rem;
 }
 
-.dsg-actions {
+.pg-actions {
   display: flex;
   gap: var(--mc-space-2);
 }
 
-.dsg-btn {
+.pg-btn {
   border: 1px solid var(--mc-border);
   background: var(--mc-surface-raised);
   color: var(--mc-text);
@@ -42,26 +42,26 @@
   cursor: pointer;
 }
 
-.dsg-btn-primary {
+.pg-btn-primary {
   background: var(--mc-primary);
   border-color: var(--mc-primary);
   color: var(--mc-primary-contrast);
   font-weight: 600;
 }
 
-.dsg-btn:disabled {
+.pg-btn:disabled {
   opacity: 0.6;
   cursor: wait;
 }
 
-.dsg-sections {
+.pg-sections {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   gap: var(--mc-space-4);
   align-items: start;
 }
 
-.dsg-card {
+.pg-card {
   background: var(--mc-surface);
   border: 1px solid var(--mc-border);
   border-radius: var(--mc-radius-md);
@@ -69,25 +69,25 @@
   box-shadow: var(--mc-shadow);
 }
 
-.dsg-card h2 {
+.pg-card h2 {
   margin: 0;
   font-size: 1.05rem;
 }
 
-.dsg-card-head {
+.pg-card-head {
   display: flex;
   align-items: center;
   gap: var(--mc-space-3);
   margin-bottom: var(--mc-space-3);
 }
 
-.dsg-tabs {
+.pg-tabs {
   display: flex;
   gap: var(--mc-space-1);
   margin-left: auto;
 }
 
-.dsg-tab {
+.pg-tab {
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--mc-radius-sm);
@@ -98,19 +98,19 @@
   padding: var(--mc-space-1) var(--mc-space-3);
 }
 
-.dsg-tab:hover {
+.pg-tab:hover {
   background: var(--mc-surface-raised);
   color: var(--mc-text);
 }
 
-.dsg-tab-active {
+.pg-tab-active {
   background: var(--mc-primary-soft);
   border-color: var(--mc-primary);
   color: var(--mc-primary);
   font-weight: 600;
 }
 
-.dsg-lang {
+.pg-lang {
   background: var(--mc-surface-sunken);
   border-radius: 999px;
   color: var(--mc-accent);
@@ -120,7 +120,7 @@
   padding: 2px 10px;
 }
 
-.dsg-denied h2 {
+.pg-denied h2 {
   color: var(--mc-danger);
 }
 

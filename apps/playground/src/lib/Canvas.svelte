@@ -29,13 +29,13 @@
   });
 </script>
 
-<div class="dsg-canvas" bind:this={host} data-testid="designer-canvas"></div>
-<p class="dsg-canvas-note" data-testid="sanitize-note">
+<div class="pg-canvas" bind:this={host} data-testid="playground-canvas"></div>
+<p class="pg-canvas-note" data-testid="sanitize-note">
   sanitizer: <strong>{stripped}</strong> unsafe pattern(s) stripped from the current documents
 </p>
 
 <style>
-  .dsg-canvas {
+  .pg-canvas {
     background: var(--mc-bg);
     border: 1px dashed var(--mc-border);
     border-radius: var(--mc-radius-md);
@@ -43,7 +43,7 @@
     padding: var(--mc-space-4);
   }
 
-  .dsg-canvas-note {
+  .pg-canvas-note {
     color: var(--mc-text-muted);
     font-size: 0.8rem;
     margin: var(--mc-space-2) 0 0;

@@ -22,7 +22,7 @@ export const FLEET_CACHE_KEY = 'fleet-data';
 function mockTransport(url: string, init: RequestInit): Promise<Response> {
   const headers = new Headers(init.headers);
   console.info(
-    `[designer] NETWORK ${url} (auth=${headers.has('Authorization') ? 'yes' : 'no'}, app=${headers.get('X-Mission-App')})`,
+    `[playground] NETWORK ${url} (auth=${headers.has('Authorization') ? 'yes' : 'no'}, app=${headers.get('X-Mission-App')})`,
   );
   const vessels: Array<[string, string]> = [
     ['Meridian', 'Explorer'],
@@ -55,7 +55,7 @@ function getClient(): HttpClient {
   if (!client) {
     const { session } = getBridge();
     client = createHttpClient({
-      interceptors: [createAuthInterceptor(session), createOriginInterceptor('designer')],
+      interceptors: [createAuthInterceptor(session), createOriginInterceptor('playground')],
       fetchImpl: mockTransport,
     });
   }

@@ -48,7 +48,7 @@ importers:
         specifier: ~5.7.2
         version: 5.7.3
 
-  apps/designer:
+  apps/playground:
     dependencies:
       '@mission/bridge':
         specifier: workspace:*

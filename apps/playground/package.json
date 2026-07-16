@@ -1,8 +1,8 @@
 {
-  "name": "designer",
+  "name": "playground",
   "version": "0.1.0",
   "private": true,
-  "description": "Mission Control remote: Svelte 5 HTML/CSS design canvas (port 4202). Monaco editor with CSS/HTML syntax switching + sanitized live preview.",
+  "description": "Mission Control remote: Svelte 5 HTML/CSS design canvas (port 4204). Monaco editor with CSS/HTML syntax switching + sanitized live preview.",
   "scripts": {
     "dev": "rsbuild dev",
     "build": "rsbuild build",

@@ -11,17 +11,17 @@ if (!hasBridge()) {
     initialTheme: 'dark',
     initialUser: {
       user: {
-        id: 'dev-designer',
-        name: 'Designer Dev',
+        id: 'dev-playground',
+        name: 'Playground Dev',
         email: 'dev@mission.local',
         roles: ['developer'],
-        permissions: ['designer:edit'],
+        permissions: ['playground:edit'],
       },
-      token: 'dev-token-designer',
+      token: 'dev-token-playground',
     },
   });
   installBridge(bridge);
-  console.info('[designer] standalone mode — local dev bridge installed');
+  console.info('[playground] standalone mode — local dev bridge installed');
 }
 
 mount(document.getElementById('root')!);

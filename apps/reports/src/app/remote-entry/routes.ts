@@ -1,5 +1,8 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import type { Routes } from '@angular/router';
+// Ships the remote's styles inside the federated chunk — the shell never
+// loads this app's index entry, so CSS must travel with the exposed module.
+import '../../reports-theme.css';
 import { requirePermission } from '@mission/bridge';
 import { bridgeGuard } from '../shared/bridge-guard';
 import { missionAuthInterceptor } from '../shared/mission-auth.interceptor';
