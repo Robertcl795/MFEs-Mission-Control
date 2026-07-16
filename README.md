@@ -18,11 +18,10 @@ A micro-frontend proof of concept built for the agentic era: **Module Federation
 
 ```bash
 pnpm install
-pnpm build:contracts   # compile @mission/bridge (apps consume its dist)
-pnpm dev               # starts shell (4200), analytics (4201), reports (4203), playground (4204)
+pnpm dev               # compiles @mission/bridge, then starts shell (4200), analytics (4201), reports (4203), playground (4204)
 ```
 
-Open **http://localhost:4200**. Each remote also runs standalone (`http://localhost:4201`, `4203`, `4204`) with a local dev bridge, honouring the exact same contracts.
+Open **http://localhost:4200**. Each remote also runs standalone (`http://localhost:4201`, `4203`, `4204`) with a local dev bridge, honouring the exact same contracts. When starting a single app on its own (`pnpm --filter <app> dev`), run `pnpm build:contracts` once first — apps consume the bridge's compiled `dist`.
 
 `pnpm build` produces production bundles for every app (`apps/*/dist`), including each remote's `mf-manifest.json`.
 
