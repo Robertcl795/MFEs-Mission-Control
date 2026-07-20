@@ -1,0 +1,27 @@
+{
+  "name": "mission-control",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mission Control \u2014 a Module Federation 2.0 + Rsbuild micro-frontend POC built for the agentic era",
+  "scripts": {
+    "build": "pnpm -r build",
+    "build:contracts": "pnpm --filter @mission/bridge build",
+    "dev": "pnpm build:contracts && pnpm -r --parallel --stream dev",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nx/angular-rspack-compiler",
+      "@parcel/watcher",
+      "core-js",
+      "esbuild",
+      "lmdb",
+      "msgpackr-extract",
+      "sass-embedded"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.angular/
+.rsbuild/
+*.tsbuildinfo
+.nx/
+.DS_Store
+*.log
+@mf-types/

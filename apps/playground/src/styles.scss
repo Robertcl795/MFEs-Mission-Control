@@ -1,0 +1,268 @@
+/* ==========================================================================
+   Playground remote chrome — a BEM (Block / Element / Modifier) showcase.
+
+   WHY BEM IN A MICRO-FRONTEND: every remote renders into the SAME document
+   as the shell and the other remotes, so class collisions are a real
+   failure mode, not a style-guide nicety. BEM solves this by convention
+   instead of tooling: the block name (namespaced `pg-` for this remote)
+   IS the scope. That is also why these styles can live in one global
+   sheet instead of Svelte's scoped <style> blocks — the naming carries
+   the isolation, so it survives any framework, bundler or copy-paste.
+
+   The anatomy used throughout:
+
+     .pg-card            → BLOCK      standalone, reusable component
+     .pg-card__title     → ELEMENT    a part that only makes sense inside
+                                      its block (block + `__` + element)
+     .pg-card--denied    → MODIFIER   a variant or state of the block
+                                      (block + `--` + modifier)
+
+   Every selector below is a single class → specificity is a flat
+   (0,1,0) across the whole sheet. Nothing ever needs `!important`, and
+   source order alone decides ties. Values come from @mission/tokens
+   custom properties: BEM names the structure, tokens name the values —
+   the two conventions compose.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-playground — the root layout block of this remote.
+   Owns page-level composition (header row, section grid) and NOTHING that
+   belongs to a reusable component. In SCSS, `&__x` nests visually but
+   compiles FLAT: `.pg-playground__header`, not `.pg-playground .header` —
+   one level of nesting, zero descendant combinators.
+   -------------------------------------------------------------------------- */
+.pg-playground {
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--mc-space-4);
+    flex-wrap: wrap;
+  }
+
+  /* ELEMENT instead of a descendant selector: `.pg-playground h1` would
+     style ANY h1 a future dev nests in here; `&__title` styles exactly the
+     node that opted in. BEM replaces "where the tag sits" with "what the
+     node is". */
+  &__title {
+    margin: 0;
+    font-size: 1.4rem;
+  }
+
+  &__subtitle {
+    color: var(--mc-text-muted);
+    font-size: 0.85rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--mc-space-2);
+  }
+
+  &__sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: var(--mc-space-4);
+    align-items: start;
+  }
+
+  /* This element exists to be MIXED onto `.pg-card` (see App.svelte:
+     class="pg-card pg-playground__section"). The mix pattern keeps the two
+     concerns separate: the card block owns its skin, while the layout
+     block owns how its children behave in the grid. `min-width: 0` is a
+     grid-child concern — it belongs here, never inside pg-card. */
+  &__section {
+    min-width: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-card — reusable surface. Knows nothing about the playground
+   layout; it could be lifted into any remote unchanged. That portability
+   is the payoff of keeping blocks context-free.
+   -------------------------------------------------------------------------- */
+.pg-card {
+  /* SCSS + BEM idiom: capture the block selector so a MODIFIER can restyle
+     an ELEMENT. This is the one place BEM sanctions a descendant
+     combinator — block-modifier cascading to its own elements. */
+  $b: &;
+
+  background: var(--mc-surface);
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-md);
+  padding: var(--mc-space-4);
+  box-shadow: var(--mc-shadow);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: var(--mc-space-3);
+    margin-bottom: var(--mc-space-3);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  &__hint {
+    color: var(--mc-text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* MODIFIER: a state of the whole block. Compiles to
+     `.pg-card--denied .pg-card__title` — the modifier class is ADDITIVE
+     (`class="pg-card pg-card--denied"`), so the base skin stays and only
+     the delta lives here. */
+  &--denied {
+    border-color: var(--mc-danger);
+
+    #{$b}__title {
+      color: var(--mc-danger);
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-btn — buttons. Variants are MODIFIERS, not new classes with
+   copied rules: `.pg-btn.pg-btn--primary` in the markup reuses everything
+   from the base block and overrides only what changes. Compare with the
+   pre-BEM version of this file, where `.pg-btn-primary` silently depended
+   on `.pg-btn` without the name saying so.
+   -------------------------------------------------------------------------- */
+.pg-btn {
+  border: 1px solid var(--mc-border);
+  background: var(--mc-surface-raised);
+  color: var(--mc-text);
+  border-radius: var(--mc-radius-sm);
+  padding: var(--mc-space-2) var(--mc-space-4);
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  &--primary {
+    background: var(--mc-primary);
+    border-color: var(--mc-primary);
+    color: var(--mc-primary-contrast);
+    font-weight: 600;
+  }
+
+  /* STATE AS MODIFIER: `--busy` is toggled from component state
+     (class:pg-btn--busy={inserting} in App.svelte). Native `:disabled`
+     still handles what the platform gives us — BEM modifiers cover the
+     states the platform has no pseudo-class for. */
+  &--busy,
+  &:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-file-tabs — the virtual-file switcher. `__tab` is an ELEMENT;
+   `--active` is an ELEMENT MODIFIER (`.pg-file-tabs__tab--active`): the
+   full grammar composes, and the class name alone tells a reader — human
+   or AI — exactly which component, part and state they are looking at.
+   -------------------------------------------------------------------------- */
+.pg-file-tabs {
+  display: flex;
+  gap: var(--mc-space-1);
+  margin-left: auto;
+
+  &__tab {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--mc-radius-sm);
+    color: var(--mc-text-muted);
+    cursor: pointer;
+    font-family: var(--mc-font-mono);
+    font-size: 0.82rem;
+    padding: var(--mc-space-1) var(--mc-space-3);
+
+    &:hover {
+      background: var(--mc-surface-raised);
+      color: var(--mc-text);
+    }
+
+    &--active {
+      background: var(--mc-primary-soft);
+      border-color: var(--mc-primary);
+      color: var(--mc-primary);
+      font-weight: 600;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-lang-badge — tiny standalone block (it appears inside a card
+   head today, but nothing in its name or rules assumes that). One modifier
+   per language, driven by data: class="pg-lang-badge pg-lang-badge--{active}".
+   -------------------------------------------------------------------------- */
+.pg-lang-badge {
+  background: var(--mc-surface-sunken);
+  border-radius: 999px;
+  font-family: var(--mc-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+
+  &--html {
+    color: var(--mc-accent);
+  }
+
+  &--css {
+    color: var(--mc-primary);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-editor — the Monaco host. A single-class block: BEM stops at
+   third-party boundaries. Monaco owns everything inside this node, so we
+   name the boundary and go no deeper.
+   -------------------------------------------------------------------------- */
+.pg-editor {
+  border: 1px solid var(--mc-border);
+  border-radius: var(--mc-radius-sm);
+  height: 420px;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   BLOCK: pg-canvas — the sanitized render surface. `__frame` hosts the
+   shadow root; `__note` is the sanitizer counter with an `--alert`
+   modifier that App state toggles when the sanitizer actually stripped
+   something — state changes read as vocabulary, not as inline styles.
+   -------------------------------------------------------------------------- */
+.pg-canvas {
+  &__frame {
+    background: var(--mc-bg);
+    border: 1px dashed var(--mc-border);
+    border-radius: var(--mc-radius-md);
+    min-height: 420px;
+    padding: var(--mc-space-4);
+  }
+
+  &__note {
+    color: var(--mc-text-muted);
+    font-size: 0.8rem;
+    margin: var(--mc-space-2) 0 0;
+
+    &--alert {
+      color: var(--mc-warn);
+      font-weight: 600;
+    }
+  }
+}
+
+/* Standalone-dev page background (inert inside the shell). Not BEM: this
+   is document-level chrome for the dev harness, not a component. */
+body {
+  margin: 0;
+  background: var(--mc-bg);
+  padding: var(--mc-space-4);
+}

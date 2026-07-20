@@ -1,0 +1,16 @@
+@import '@mission/tokens/tokens.css';
+
+/* Standalone-dev harness chrome ONLY (inert inside the shell).
+ * The remote's real styles live in reports-theme.css, imported by the
+ * federated entry so they load wherever the routes load. */
+
+body {
+  margin: 0;
+  background: var(--mc-bg);
+}
+
+.mcr-standalone {
+  padding: var(--mc-space-5);
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+}
