@@ -1,5 +1,6 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginSvelte } from '@rsbuild/plugin-svelte';
+import { pluginSass } from '@rsbuild/plugin-sass';
 import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 
 /**
@@ -14,6 +15,10 @@ import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
 export default defineConfig({
   plugins: [
     pluginSvelte(),
+    // The remote's chrome is written in SCSS following BEM (see styles.scss)
+    // — the SCSS nesting sugar (&__element / &--modifier) compiles to flat,
+    // single-class BEM selectors.
+    pluginSass(),
     pluginModuleFederation({
       name: 'playground',
       // POC: remote types are hand-declared (remotes.d.ts); generated

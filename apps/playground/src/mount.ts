@@ -1,7 +1,7 @@
 import { mount as svelteMount, unmount as svelteUnmount } from 'svelte';
 import App from './App.svelte';
 import '@mission/tokens/tokens.css';
-import './styles.css';
+import './styles.scss';
 
 export interface MountOptions {
   /** Path prefix the shell mounted this remote under (reserved for sub-routes). */

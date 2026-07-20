@@ -66,61 +66,91 @@
   }
 </script>
 
-<div class="pg-root" data-testid="playground-root">
-  <header class="pg-header">
+<!-- BEM SHOWCASE — every class below follows `block__element--modifier`
+     with a `pg-` namespace: in a federation all remotes share one document,
+     so the block prefix is what makes collisions impossible by convention.
+     The matching sheet is src/styles.scss (SCSS flavour); the canvas's
+     default documents (lib/defaults.ts) show the same grammar in vanilla
+     CSS, editable live in Monaco. -->
+<div class="pg-playground" data-testid="playground-root">
+  <header class="pg-playground__header">
     <div>
-      <h1>Playground</h1>
-      <p class="pg-muted">Svelte 5 remote · signed in as {user?.name ?? 'anonymous'}</p>
+      <!-- ELEMENTS, not descendant selectors: `__title`/`__subtitle` opt in
+           by name, so no future h1/p nested in here inherits styles by
+           accident. -->
+      <h1 class="pg-playground__title">Playground</h1>
+      <p class="pg-playground__subtitle">Svelte 5 remote · signed in as {user?.name ?? 'anonymous'}</p>
     </div>
-    <div class="pg-actions">
+    <div class="pg-playground__actions">
       <button class="pg-btn" onclick={resetFiles}>Reset files</button>
-      <button class="pg-btn pg-btn-primary" onclick={insertFleetTable} disabled={inserting} data-testid="insert-fleet">
+      <!-- MODIFIERS are additive: base block + `--primary` variant, plus the
+           `--busy` STATE modifier bound to component state — the DOM reads
+           "a pg-btn, primary variant, currently busy". -->
+      <button
+        class="pg-btn pg-btn--primary"
+        class:pg-btn--busy={inserting}
+        onclick={insertFleetTable}
+        disabled={inserting}
+        data-testid="insert-fleet"
+      >
         {inserting ? 'Loading…' : 'Insert fleet table (shared cache)'}
       </button>
     </div>
   </header>
 
   {#if decision.allowed}
-    <div class="pg-sections">
-      <section class="pg-card">
-        <div class="pg-card-head">
-          <h2>Editor</h2>
-          <nav class="pg-tabs" aria-label="Files">
+    <div class="pg-playground__sections">
+      <!-- BEM MIX: one node, two blocks' classes. `pg-card` brings the
+           reusable skin; `pg-playground__section` brings the grid-child
+           behaviour. Neither block knows the other exists — that's what
+           keeps pg-card portable. -->
+      <section class="pg-card pg-playground__section">
+        <div class="pg-card__head">
+          <h2 class="pg-card__title">Editor</h2>
+          <nav class="pg-file-tabs" aria-label="Files">
+            <!-- ELEMENT MODIFIER: `pg-file-tabs__tab--active` — component,
+                 part and state, all in the class name. -->
             <button
-              class="pg-tab"
-              class:pg-tab-active={active === 'html'}
+              class="pg-file-tabs__tab"
+              class:pg-file-tabs__tab--active={active === 'html'}
               onclick={() => (active = 'html')}
               data-testid="file-tab-html"
             >
               index.html
             </button>
             <button
-              class="pg-tab"
-              class:pg-tab-active={active === 'css'}
+              class="pg-file-tabs__tab"
+              class:pg-file-tabs__tab--active={active === 'css'}
               onclick={() => (active = 'css')}
               data-testid="file-tab-css"
             >
               styles.css
             </button>
           </nav>
-          <span class="pg-lang" data-testid="editor-lang">{active === 'html' ? 'HTML' : 'CSS'}</span>
+          <!-- Data-driven modifier: `--html` / `--css` interpolated straight
+               from state — modifiers as a closed vocabulary of variants. -->
+          <span class="pg-lang-badge pg-lang-badge--{active}" data-testid="editor-lang">{active === 'html' ? 'HTML' : 'CSS'}</span>
         </div>
         <Editor html={files.html} css={files.css} {active} onchange={onFileChange} />
       </section>
 
-      <section class="pg-card">
-        <div class="pg-card-head">
-          <h2>Canvas</h2>
-          <span class="pg-muted">sanitized live preview · shadow DOM</span>
+      <section class="pg-card pg-playground__section">
+        <div class="pg-card__head">
+          <h2 class="pg-card__title">Canvas</h2>
+          <span class="pg-card__hint">sanitized live preview · shadow DOM</span>
         </div>
         <Canvas html={files.html} css={files.css} />
       </section>
     </div>
   {:else}
-    <section class="pg-card pg-denied" data-testid="access-denied">
-      <h2>Access denied</h2>
+    <!-- BLOCK MODIFIER: the denied state keeps the base class and layers
+         `--denied` on top — the sheet stores only the delta, and the SCSS
+         `$b: &` trick lets the modifier restyle `pg-card__title` without
+         breaking the flat-specificity rule anywhere else. -->
+    <section class="pg-card pg-card--denied" data-testid="access-denied">
+      <h2 class="pg-card__title">Access denied</h2>
       <p>{decision.reason ?? 'You do not have permission to use the playground.'}</p>
-      <p class="pg-muted">
+      <p class="pg-card__hint">
         Decision made by the same <code>@mission/bridge</code> validators that guard the Angular and React remotes.
       </p>
     </section>

@@ -72,6 +72,9 @@ importers:
       '@rsbuild/core':
         specifier: ~1.7.6
         version: 1.7.6
+      '@rsbuild/plugin-sass':
+        specifier: ^1.5.3
+        version: 1.5.3(@rsbuild/core@1.7.6)
       '@rsbuild/plugin-svelte':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.29.7)(@rsbuild/core@1.7.6)(less@4.6.7)(postcss@8.5.19)(sass@1.100.0)(svelte@5.56.5)(typescript@5.8.3)

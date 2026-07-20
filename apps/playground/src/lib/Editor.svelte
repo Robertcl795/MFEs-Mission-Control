@@ -66,13 +66,9 @@
   });
 </script>
 
-<div class="pg-monaco" bind:this={host} data-testid="playground-editor"></div>
-
-<style>
-  .pg-monaco {
-    border: 1px solid var(--mc-border);
-    border-radius: var(--mc-radius-sm);
-    height: 420px;
-    overflow: hidden;
-  }
-</style>
+<!-- BEM: `pg-editor` is a single-class block — the convention stops at
+     third-party boundaries, and everything inside this node belongs to
+     Monaco. Its rules live in styles.scss with the other blocks: BEM's
+     namespacing IS the scoping, so Svelte's scoped <style> is not needed
+     to keep this collision-free. -->
+<div class="pg-editor" bind:this={host} data-testid="playground-editor"></div>

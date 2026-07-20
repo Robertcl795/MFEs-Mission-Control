@@ -74,13 +74,24 @@ export function isFleetDataCached(): boolean {
   return getBridge().cache.peek(FLEET_CACHE_KEY) !== undefined;
 }
 
-/** Renders the shared dataset as an HTML fragment for the canvas. */
+/**
+ * Renders the shared dataset as an HTML fragment for the canvas. The
+ * generated markup follows the same BEM grammar as the default documents:
+ * `fleet-table` block, `__cell` elements, and the row status expressed as
+ * an element modifier (`fleet-table__cell--critical`) instead of the old
+ * orphan `.status-*` classes that nothing tied back to the table.
+ */
 export function fleetTableHtml(rows: FleetRecord[]): string {
+  const cell = (value: string | number, modifier = '') =>
+    `<td class="fleet-table__cell${modifier ? ` fleet-table__cell--${modifier}` : ''}">${value}</td>`;
+  const head = ['ID', 'Vessel', 'Class', 'Status', 'Fuel']
+    .map((label) => `<th class="fleet-table__cell fleet-table__cell--head">${label}</th>`)
+    .join('');
   const body = rows
     .map(
       (row) =>
-        `    <tr><td>${row.id}</td><td>${row.vessel}</td><td>${row.class}</td><td class="status-${row.status}">${row.status}</td><td>${row.fuelPct}%</td></tr>`,
+        `    <tr>${cell(row.id)}${cell(row.vessel)}${cell(row.class)}${cell(row.status, row.status)}${cell(`${row.fuelPct}%`)}</tr>`,
     )
     .join('\n');
-  return `<table class="fleet">\n  <thead>\n    <tr><th>ID</th><th>Vessel</th><th>Class</th><th>Status</th><th>Fuel</th></tr>\n  </thead>\n  <tbody>\n${body}\n  </tbody>\n</table>`;
+  return `<table class="fleet-table">\n  <thead>\n    <tr>${head}</tr>\n  </thead>\n  <tbody>\n${body}\n  </tbody>\n</table>`;
 }

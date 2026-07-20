@@ -29,23 +29,14 @@
   });
 </script>
 
-<div class="pg-canvas" bind:this={host} data-testid="playground-canvas"></div>
-<p class="pg-canvas-note" data-testid="sanitize-note">
-  sanitizer: <strong>{stripped}</strong> unsafe pattern(s) stripped from the current documents
-</p>
-
-<style>
-  .pg-canvas {
-    background: var(--mc-bg);
-    border: 1px dashed var(--mc-border);
-    border-radius: var(--mc-radius-md);
-    min-height: 420px;
-    padding: var(--mc-space-4);
-  }
-
-  .pg-canvas-note {
-    color: var(--mc-text-muted);
-    font-size: 0.8rem;
-    margin: var(--mc-space-2) 0 0;
-  }
-</style>
+<!-- BEM block `pg-canvas`: `__frame` hosts the shadow root, `__note` is the
+     sanitizer counter. The `--alert` ELEMENT MODIFIER is bound to component
+     state — when the sanitizer strips something, the state change reads as
+     vocabulary (`pg-canvas__note--alert`) instead of an inline style.
+     Styles live in styles.scss; BEM's namespacing replaces scoped <style>. -->
+<div class="pg-canvas">
+  <div class="pg-canvas__frame" bind:this={host} data-testid="playground-canvas"></div>
+  <p class="pg-canvas__note" class:pg-canvas__note--alert={stripped > 0} data-testid="sanitize-note">
+    sanitizer: <strong>{stripped}</strong> unsafe pattern(s) stripped from the current documents
+  </p>
+</div>

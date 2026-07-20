@@ -19,6 +19,7 @@
   "devDependencies": {
     "@module-federation/rsbuild-plugin": "^2.7.0",
     "@rsbuild/core": "~1.7.6",
+    "@rsbuild/plugin-sass": "^1.5.3",
     "@rsbuild/plugin-svelte": "^1.1.2",
     "typescript": "~5.8.3"
   }
