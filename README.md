@@ -13,6 +13,7 @@ A micro-frontend proof of concept built for the agentic era: **Module Federation
 | --- | --- |
 | `@mission/bridge` | Framework-agnostic contracts: EventBus, SessionFacade, ThemeChannel, SWR DataCache, TaskManager, route validators, HTTP interceptors. |
 | `@mission/tokens` | CSS custom properties (`--mc-*`) driven by `html[data-theme]`. |
+| `create-mission-remote` | Scaffolding CLI for new remotes: Rsbuild + MF 2.0 preset wiring, `@mission/bridge` boilerplate, AI-agent context files (`.cursorrules`/`CLAUDE.md` + MCP pointer) and centralised CI. See [packages/create-mission-remote](./packages/create-mission-remote). |
 
 ## Quick start
 

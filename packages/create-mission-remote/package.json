@@ -1,0 +1,31 @@
+{
+  "name": "create-mission-remote",
+  "version": "0.1.0",
+  "description": "Scaffold a Mission Control micro-frontend remote: Rsbuild + Module Federation 2.0, @mission/bridge wiring, AI-agent context files and centralised CI in one command.",
+  "type": "module",
+  "bin": {
+    "create-mission-remote": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "fs-extra": "^11.3.0",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "typescript": "~5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
