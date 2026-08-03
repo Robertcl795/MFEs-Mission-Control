@@ -91,7 +91,7 @@ export const DEFAULT_CSS = `/* BEM in vanilla CSS — no preprocessor required.
 }
 
 /* Second block — styles for the "Insert fleet table" demo (shared
-   DataCache). Same grammar; blocks never reference each other. */
+   SharedDataCache). Same grammar; blocks never reference each other. */
 .fleet-table {
   border-collapse: collapse;
   font-family: var(--mc-font-mono, monospace);

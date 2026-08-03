@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, type OnDestroy, type OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { getBridge, type MissionUser, type ThemeName, type Unsubscribe } from '@mission/bridge';
-import { getSessionController } from './host-bridge';
+import { getBridge, type UserIdentity, type ThemeName, type Unsubscribe } from '@teradata-pe/bridge';
+import { getAuthSessionController } from './host-bridge';
 import { ToastCenterComponent } from './toast/toast-center.component';
 
 @Component({
@@ -45,7 +45,7 @@ import { ToastCenterComponent } from './toast/toast-center.component';
       <footer class="shell-footer">
         <span>bridge v{{ bridgeVersion }}</span>
         <span>cache · {{ cacheKeys().length }} keys</span>
-        <span>tasks · {{ runningTasks() }} running</span>
+        <span>operations · {{ runningOperations() }} running</span>
         <span class="footer-note">host: shell (Angular 20) · remotes: analytics (React 19), playground (Svelte 5), reports (Angular 20)</span>
       </footer>
 
@@ -59,15 +59,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   readonly bridgeVersion = this.bridge.version;
   readonly theme = signal<ThemeName>(this.bridge.theme.current);
-  readonly user = signal<Readonly<MissionUser> | null>(this.bridge.session.user);
+  readonly user = signal<Readonly<UserIdentity> | null>(this.bridge.session.user);
   readonly isAdmin = signal(this.bridge.session.can('admin'));
   readonly cacheKeys = signal<string[]>(this.bridge.cache.keys());
-  readonly runningTasks = signal(0);
+  readonly runningOperations = signal(0);
 
   constructor(private readonly router: Router) {}
 
   ngOnInit(): void {
-    const { bus, theme, session, cache, tasks } = this.bridge;
+    const { bus, theme, session, cache, operations } = this.bridge;
     this.subs.push(
       theme.subscribe((next) => this.theme.set(next)),
       session.subscribe((user) => {
@@ -76,9 +76,9 @@ export class AppComponent implements OnInit, OnDestroy {
       }),
       bus.on('cache:updated', () => this.cacheKeys.set(cache.keys())),
       bus.on('cache:invalidated', () => this.cacheKeys.set(cache.keys())),
-      tasks.subscribe(() => this.runningTasks.set(tasks.list().filter((t) => t.status === 'running').length)),
+      operations.subscribe(() => this.runningOperations.set(operations.list().filter((operation) => operation.status === 'running').length)),
       // Remotes may request host-level navigation (e.g. blocked routes).
-      bus.on('shell:navigate', ({ url }) => void this.router.navigateByUrl(url)),
+      bus.on('navigation:request', ({ url }) => void this.router.navigateByUrl(url)),
     );
   }
 
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   toggleAdmin(): void {
-    const controller = getSessionController();
+    const controller = getAuthSessionController();
     if (this.bridge.session.can('admin')) {
       controller.revoke('admin');
     } else {

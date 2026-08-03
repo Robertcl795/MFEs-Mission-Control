@@ -25,7 +25,7 @@ function frameworkAdapterSection(spec: RemoteSpec): string {
 
 \`\`\`tsx
 import { useSyncExternalStore } from 'react';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 
 export function useTheme() {
   const { theme } = getBridge();
@@ -36,7 +36,7 @@ export function useTheme() {
 }
 \`\`\`
 
-- Route protection: compose validators from \`@mission/bridge\`
+- Route protection: compose validators from \`@teradata-pe/bridge\`
   (\`requireAuth\`, \`requirePermission\`, \`composeValidators\`) behind a
   \`<Protected>\` component adapter. Never hand-roll permission checks.`,
 
@@ -52,7 +52,7 @@ export function useTheme() {
 
 \`\`\`ts
 import { readable } from 'svelte/store';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 
 export const theme = readable(getBridge().theme.current, (set) =>
   getBridge().theme.subscribe(set),
@@ -61,7 +61,7 @@ export const theme = readable(getBridge().theme.current, (set) =>
 
 - This remote is compiled by Rsbuild/Rspack — SvelteKit (Vite-bound, SSR
   routing) is incompatible with the federation and must not be introduced.
-- Route protection: compose validators from \`@mission/bridge\`
+- Route protection: compose validators from \`@teradata-pe/bridge\`
   (\`requireAuth\`, \`requirePermission\`, \`composeValidators\`). Never hand-roll
   permission checks.`,
 
@@ -79,9 +79,9 @@ export const theme = readable(getBridge().theme.current, (set) =>
 
 \`\`\`ts
 import { InjectionToken } from '@angular/core';
-import { getBridge, type MissionBridge } from '@mission/bridge';
+import { getBridge, type UiBridge } from '@teradata-pe/bridge';
 
-export const MISSION_BRIDGE = new InjectionToken<MissionBridge>('MISSION_BRIDGE', {
+export const MISSION_BRIDGE = new InjectionToken<UiBridge>('MISSION_BRIDGE', {
   providedIn: 'root',
   factory: () => getBridge(),
 });
@@ -103,7 +103,7 @@ export function agentRulesBody(spec: RemoteSpec): string {
   return `# ${spec.name} — AI agent operating rules (Mission Control remote)
 
 You are an AI assistant working on the ${fwLabel} remote '${spec.name}'. Do NOT
-implement global state locally. Use vanilla TS state from \`@mission/bridge\`
+implement global state locally. Use vanilla TS state from \`@teradata-pe/bridge\`
 via native adapters.
 
 This file is a CONTRACT, not a suggestion. Violating it breaks the federation
@@ -118,18 +118,18 @@ propose a compliant alternative.
   remote.
 - Before adding a cross-MFE event, dataset or permission, query the MCP server
   first — if the contract already exists, reuse it; if it doesn't, it must be
-  added to \`@mission/bridge\` (contracts-first), never invented locally.
+  added to \`@teradata-pe/bridge\` (contracts-first), never invented locally.
 
 ## Non-negotiable platform rules
 
 1. **Global state lives in the bridge.** Session, theme, cross-MFE events,
    shared datasets and long-running tasks are consumed ONLY through
-   \`getBridge()\` from \`@mission/bridge\` (EventBus, SessionFacade,
-   ThemeChannel, DataCache, TaskManager). Local component state is fine;
+   \`getBridge()\` from \`@teradata-pe/bridge\` (EventBus, AuthSession,
+   ThemeChannel, SharedDataCache, AsyncOperationManager). Local component state is fine;
    local copies of global state are not.
 2. **Never import from another remote or from the shell.** Remotes are
    sovereign. If two remotes need the same thing, it belongs in the bridge or
-   behind a \`DataCache\` key.
+   behind a \`SharedDataCache\` key.
 3. **No bare \`fetch\` for shared datasets.** Use \`bridge.cache.fetch(key,
    fetcher, opts)\` so requests dedupe federation-wide. New keys must be
    registered in the bridge's cache-key registry.

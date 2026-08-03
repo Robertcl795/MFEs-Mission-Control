@@ -4,7 +4,7 @@ import {
   createOriginInterceptor,
   getBridge,
   type HttpClient,
-} from '@mission/bridge';
+} from '@teradata-pe/bridge';
 
 export interface FleetRecord {
   id: string;
@@ -26,7 +26,7 @@ export const FLEET_CACHE_KEY = 'fleet-data';
 function mockTransport(url: string, init: RequestInit): Promise<Response> {
   const headers = new Headers(init.headers);
   console.info(
-    `[analytics] NETWORK ${url} (auth=${headers.has('Authorization') ? 'yes' : 'no'}, app=${headers.get('X-Mission-App')})`,
+    `[analytics] NETWORK ${url} (auth=${headers.has('Authorization') ? 'yes' : 'no'}, app=${headers.get('X-Remote-App')})`,
   );
   const vessels: Array<[string, string]> = [
     ['Meridian', 'Explorer'],

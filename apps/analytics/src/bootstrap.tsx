@@ -1,4 +1,4 @@
-import { createMissionBridge, hasBridge, installBridge } from '@mission/bridge';
+import { createBridge, hasBridge, installBridge } from '@teradata-pe/bridge';
 import { mount } from './mount';
 
 /**
@@ -7,7 +7,7 @@ import { mount } from './mount';
  * remote honours the exact same contracts without a host.
  */
 if (!hasBridge()) {
-  const { bridge } = createMissionBridge({
+  const { bridge } = createBridge({
     initialTheme: 'dark',
     initialUser: {
       user: {

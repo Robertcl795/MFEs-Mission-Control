@@ -1,5 +1,5 @@
 <script>
-  import { evaluateRoute, getBridge, requirePermission } from '@mission/bridge';
+  import { evaluateRoute, getBridge, requirePermission } from '@teradata-pe/bridge';
   import Editor from './lib/Editor.svelte';
   import Canvas from './lib/Canvas.svelte';
   import { DEFAULT_CSS, DEFAULT_HTML } from './lib/defaults';
@@ -9,7 +9,7 @@
    * Playground remote root (Svelte 5). House rules apply:
    *  - session/theme/cache come from the bridge, never local state;
    *  - gating uses the SAME shared validators as the Angular and React remotes;
-   *  - document state persists in the shared DataCache, so it survives
+   *  - document state persists in the shared SharedDataCache, so it survives
    *    navigating away to another remote and back.
    */
   const bridge = getBridge();
@@ -51,7 +51,7 @@
         intent: 'info',
         title: 'Fleet table inserted into the canvas',
         message: fromCache
-          ? 'Dataset served from the shared DataCache — no network request'
+          ? 'Dataset served from the shared SharedDataCache — no network request'
           : 'Dataset fetched once — now cached for every remote',
         durationMs: 5000,
       });
@@ -151,7 +151,7 @@
       <h2 class="pg-card__title">Access denied</h2>
       <p>{decision.reason ?? 'You do not have permission to use the playground.'}</p>
       <p class="pg-card__hint">
-        Decision made by the same <code>@mission/bridge</code> validators that guard the Angular and React remotes.
+        Decision made by the same <code>@teradata-pe/bridge</code> validators that guard the Angular and React remotes.
       </p>
     </section>
   {/if}

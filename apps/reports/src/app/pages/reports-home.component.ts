@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 
 interface MfManifestSummary {
   name: string;

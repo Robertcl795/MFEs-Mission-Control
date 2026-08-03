@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
     <div class="panel forbidden" data-testid="forbidden">
       <h1>403 — Not on the manifest</h1>
       <p>
-        A <code>@mission/bridge</code> route validator blocked this navigation. Grant yourself
+        A <code>@teradata-pe/bridge</code> route validator blocked this navigation. Grant yourself
         <code>admin</code> from the header toggle and try again.
       </p>
       <a routerLink="/">Back to dashboard</a>

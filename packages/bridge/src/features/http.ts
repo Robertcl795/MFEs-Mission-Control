@@ -1,4 +1,4 @@
-import type { SessionFacade } from './session';
+import type { AuthSession } from './session';
 
 /**
  * Framework-agnostic HTTP interception.
@@ -14,8 +14,8 @@ export interface BridgeRequest {
 
 export type HttpRequestInterceptor = (request: BridgeRequest) => Promise<BridgeRequest> | BridgeRequest;
 
-/** Adds Authorization / X-Mission-User headers from the host-owned session. */
-export function createAuthInterceptor(session: SessionFacade): HttpRequestInterceptor {
+/** Adds authorization headers from the host-owned session. */
+export function createAuthInterceptor(session: AuthSession): HttpRequestInterceptor {
   return async ({ url, init }) => ({ url, init: await session.authorizeRequest(init) });
 }
 
@@ -23,7 +23,7 @@ export function createAuthInterceptor(session: SessionFacade): HttpRequestInterc
 export function createOriginInterceptor(appName: string): HttpRequestInterceptor {
   return ({ url, init }) => {
     const headers = new Headers(init.headers);
-    headers.set('X-Mission-App', appName);
+    headers.set('X-Remote-App', appName);
     return { url, init: { ...init, headers } };
   };
 }

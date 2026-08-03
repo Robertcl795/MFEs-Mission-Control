@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mission/bridge": "workspace:*",
+    "@teradata-pe/bridge": "workspace:*",
     "@mission/tokens": "workspace:*",
     "dompurify": "^3.4.0",
     "monaco-editor": "^0.52.2",

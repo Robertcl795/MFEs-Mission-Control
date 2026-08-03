@@ -1,4 +1,4 @@
-import { getBridge, type TaskSnapshot } from '@mission/bridge';
+import { getBridge, type OperationSnapshot } from '@teradata-pe/bridge';
 import { loadFleetData, type FleetRecord } from './fleet';
 
 export interface FleetReport {
@@ -29,16 +29,16 @@ const PHASES = [
 
 /**
  * Kicks off a long-running "server-side" generation job via the HOST-owned
- * TaskManager. The poll closure below keeps executing in the host even
+ * AsyncOperationManager. The poll closure below keeps executing in the host even
  * after this remote unmounts — progress and completion are broadcast on the
- * bridge EventBus, and the result lands in the shared DataCache.
+ * bridge EventBus, and the result lands in the shared SharedDataCache.
  */
-export function startReportGeneration(): TaskSnapshot {
+export function startReportGeneration(): OperationSnapshot {
   const bridge = getBridge();
   const id = `rpt-${Date.now().toString(36)}`;
   const requestedBy = bridge.session.user?.name ?? 'unknown';
 
-  return bridge.tasks.start<FleetReport>({
+  return bridge.operations.start<FleetReport>({
     id,
     kind: 'report:generate',
     title: 'Fleet readiness report',

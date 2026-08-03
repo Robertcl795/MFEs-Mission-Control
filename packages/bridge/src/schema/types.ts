@@ -1,5 +1,5 @@
 /**
- * Core shared types for the Mission Control bridge.
+ * Core shared types for the UI bridge contract.
  *
  * Everything in this package is framework-agnostic: no Angular, no React,
  * no bundler-specific APIs. Remotes and the host communicate exclusively
@@ -20,7 +20,7 @@ export type Permission =
   | 'admin'
   | (string & {});
 
-export interface MissionUser {
+export interface UserIdentity {
   id: string;
   name: string;
   email: string;
@@ -28,23 +28,23 @@ export interface MissionUser {
   permissions: Permission[];
 }
 
-export type TaskStatus = 'running' | 'completed' | 'failed' | 'cancelled';
+export type OperationStatus = 'running' | 'completed' | 'failed' | 'cancelled';
 
-/** Immutable snapshot of a task, safe to hand to any remote. */
-export interface TaskSnapshot {
+/** Immutable snapshot of an asynchronous operation, safe to hand to any remote. */
+export interface OperationSnapshot {
   id: string;
   /** Namespaced kind, e.g. `report:generate`. */
   kind: string;
-  /** Human-readable title, shown in the shell's toasts / task tray. */
+  /** Human-readable title, shown in the host's toasts / operation tray. */
   title: string;
-  status: TaskStatus;
+  status: OperationStatus;
   /** 0..100 */
   progress: number;
   message?: string;
   error?: string;
   startedAt: number;
   finishedAt?: number;
-  /** DataCache key where the result is stored on completion. */
+  /** SharedDataCache key where the result is stored on completion. */
   cacheKey?: string;
   /** Shell route to navigate to when the user clicks the completion toast. */
   resultRoute?: string;
@@ -62,20 +62,20 @@ export interface ToastPayload {
 }
 
 /**
- * The global, strongly-typed event map for the Mission Control event bus.
- * Add new cross-MFE events HERE first — if it is not in this map, it is
+ * The globally shared, strongly-typed event map for the bridge event bus.
+ * Add new cross-remote events HERE first — if it is not in this map, it is
  * not part of the contract.
  */
-export interface MissionEventMap {
+export interface BridgeEventMap {
   'theme:changed': { theme: ThemeName };
-  'session:changed': { user: Readonly<MissionUser> | null };
+  'session:changed': { user: Readonly<UserIdentity> | null };
   'cache:updated': { key: string };
   'cache:invalidated': { key: string };
-  'task:started': TaskSnapshot;
-  'task:progress': TaskSnapshot;
-  'task:completed': TaskSnapshot;
-  'task:failed': TaskSnapshot;
+  'operation:started': OperationSnapshot;
+  'operation:progress': OperationSnapshot;
+  'operation:completed': OperationSnapshot;
+  'operation:failed': OperationSnapshot;
   'toast:show': ToastPayload;
   /** Remotes may ask the shell to navigate (deep links, toast actions...). */
-  'shell:navigate': { url: string };
+  'navigation:request': { url: string };
 }

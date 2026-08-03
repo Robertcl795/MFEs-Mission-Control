@@ -1,0 +1,222 @@
+core/create-bridge :: authSessionController: AuthSessionController;
+core/create-bridge :: bridge: UiBridge;
+core/create-bridge :: export declare const BRIDGE_VERSION = "0.1.0";
+core/create-bridge :: export declare function createBridge(options?: CreateBridgeOptions): BridgeKit;
+core/create-bridge :: export interface BridgeKit {
+core/create-bridge :: export interface CreateBridgeOptions {
+core/create-bridge :: import type { ThemeName, UserIdentity } from '../schema/types';
+core/create-bridge :: import type { UiBridge } from './global';
+core/create-bridge :: import { type AuthSessionController } from '../features/session';
+core/create-bridge :: initialTheme?: ThemeName;
+core/create-bridge :: initialUser?: {
+core/create-bridge :: token: string;
+core/create-bridge :: user: UserIdentity;
+core/create-bridge :: }
+core/create-bridge :: }
+core/create-bridge :: };
+core/event-bus :: emit<K extends keyof TMap & string>(event: K, payload: TMap[K]): void;
+core/event-bus :: export declare function createEventBus<TMap extends object = BridgeEventMap>(): EventBus<TMap>;
+core/event-bus :: export interface EventBus<TMap extends object = BridgeEventMap> {
+core/event-bus :: export type EventHandler<T> = (payload: T) => void;
+core/event-bus :: import type { BridgeEventMap, Unsubscribe } from '../schema/types';
+core/event-bus :: on<K extends keyof TMap & string>(event: K, handler: EventHandler<TMap[K]>): Unsubscribe;
+core/event-bus :: onAny(handler: (event: string, payload: unknown) => void): Unsubscribe;
+core/event-bus :: once<K extends keyof TMap & string>(event: K, handler: EventHandler<TMap[K]>): Unsubscribe;
+core/event-bus :: }
+core/global :: export declare function getBridge(): UiBridge;
+core/global :: export declare function hasBridge(): boolean;
+core/global :: export declare function installBridge(bridge: UiBridge): UiBridge;
+core/global :: export interface UiBridge {
+core/global :: import type { AsyncOperationManager } from '../features/operations';
+core/global :: import type { AuthSession } from '../features/session';
+core/global :: import type { EventBus } from './event-bus';
+core/global :: import type { SharedDataCache } from '../features/data-cache';
+core/global :: import type { ThemeChannel } from '../features/theme';
+core/global :: readonly bus: EventBus;
+core/global :: readonly cache: SharedDataCache;
+core/global :: readonly operations: AsyncOperationManager;
+core/global :: readonly session: AuthSession;
+core/global :: readonly theme: ThemeChannel;
+core/global :: readonly version: string;
+core/global :: }
+features/data-cache :: export declare function createSharedDataCache(bus: EventBus): SharedDataCache;
+features/data-cache :: export interface CacheEntry<T = unknown> {
+features/data-cache :: export interface SharedDataCache {
+features/data-cache :: export interface SwrOptions {
+features/data-cache :: fetch<T>(key: string, fetcher: () => Promise<T>, options?: SwrOptions): Promise<T>;
+features/data-cache :: forceRevalidate?: boolean;
+features/data-cache :: getEntry<T>(key: string): CacheEntry<T> | undefined;
+features/data-cache :: import type { EventBus } from '../core/event-bus';
+features/data-cache :: import type { Unsubscribe } from '../schema/types';
+features/data-cache :: invalidate(key: string): void;
+features/data-cache :: isStale: boolean;
+features/data-cache :: key: string;
+features/data-cache :: keys(): string[];
+features/data-cache :: peek<T>(key: string): T | undefined;
+features/data-cache :: set<T>(key: string, value: T): void;
+features/data-cache :: staleMs?: number;
+features/data-cache :: storedAt: number;
+features/data-cache :: subscribe(key: string, listener: (entry: CacheEntry | undefined) => void): Unsubscribe;
+features/data-cache :: ttlMs?: number;
+features/data-cache :: value: T;
+features/data-cache :: }
+features/data-cache :: }
+features/data-cache :: }
+features/http :: export declare function createAuthInterceptor(session: AuthSession): HttpRequestInterceptor;
+features/http :: export declare function createHttpClient(options?: HttpClientOptions): HttpClient;
+features/http :: export declare function createOriginInterceptor(appName: string): HttpRequestInterceptor;
+features/http :: export interface BridgeRequest {
+features/http :: export interface HttpClientOptions {
+features/http :: export type HttpClient = (url: string, init?: RequestInit) => Promise<Response>;
+features/http :: export type HttpRequestInterceptor = (request: BridgeRequest) => Promise<BridgeRequest> | BridgeRequest;
+features/http :: fetchImpl?: (url: string, init: RequestInit) => Promise<Response>;
+features/http :: import type { AuthSession } from './session';
+features/http :: init: RequestInit;
+features/http :: interceptors?: HttpRequestInterceptor[];
+features/http :: url: string;
+features/http :: }
+features/http :: }
+features/operations :: cacheKey?: string;
+features/operations :: cancel(id: string): void;
+features/operations :: error?: string;
+features/operations :: export declare function createAsyncOperationManager(bus: EventBus, cache: SharedDataCache): AsyncOperationManager;
+features/operations :: export interface AsyncOperationManager {
+features/operations :: export interface OperationDescriptor<TResult = unknown> {
+features/operations :: export interface OperationPollResult<TResult = unknown> {
+features/operations :: get(id: string): OperationSnapshot | undefined;
+features/operations :: id?: string;
+features/operations :: import type { EventBus } from '../core/event-bus';
+features/operations :: import type { OperationSnapshot, OperationStatus, Unsubscribe } from '../schema/types';
+features/operations :: import type { SharedDataCache } from './data-cache';
+features/operations :: intervalMs?: number;
+features/operations :: kind: string;
+features/operations :: list(): OperationSnapshot[];
+features/operations :: message?: string;
+features/operations :: poll: (tick: number, snapshot: OperationSnapshot) => Promise<OperationPollResult<TResult>>;
+features/operations :: progress?: number;
+features/operations :: result?: TResult;
+features/operations :: resultRoute?: string;
+features/operations :: start<TResult>(descriptor: OperationDescriptor<TResult>): OperationSnapshot;
+features/operations :: status: Extract<OperationStatus, 'running' | 'completed' | 'failed'>;
+features/operations :: subscribe(listener: (snapshot: OperationSnapshot) => void): Unsubscribe;
+features/operations :: title: string;
+features/operations :: }
+features/operations :: }
+features/operations :: }
+features/routing :: allowed: boolean;
+features/routing :: export declare const ALLOW: RouteDecision;
+features/routing :: export declare function composeValidators(...validators: RouteValidator[]): RouteValidator;
+features/routing :: export declare function evaluateRoute(validator: RouteValidator, session: AuthSession, path: string): RouteDecision;
+features/routing :: export declare function requireAuth(redirectTo?: string): RouteValidator;
+features/routing :: export declare function requirePermission(permission: Permission, redirectTo?: string): RouteValidator;
+features/routing :: export interface RouteContext {
+features/routing :: export interface RouteDecision {
+features/routing :: export type RouteValidator = (ctx: RouteContext) => RouteDecision;
+features/routing :: import type { AuthSession } from './session';
+features/routing :: import type { Permission } from '../schema/types';
+features/routing :: path: string;
+features/routing :: reason?: string;
+features/routing :: redirectTo?: string;
+features/routing :: session: AuthSession;
+features/routing :: }
+features/routing :: }
+features/session :: authorizeRequest(init?: RequestInit): Promise<RequestInit>;
+features/session :: can(permission: Permission): boolean;
+features/session :: export declare function createAuthSessionController(bus: EventBus): AuthSessionController;
+features/session :: export interface AuthSession {
+features/session :: export interface AuthSessionController {
+features/session :: facade: AuthSession;
+features/session :: grant(permission: Permission): void;
+features/session :: import type { EventBus } from '../core/event-bus';
+features/session :: import type { Permission, Unsubscribe, UserIdentity } from '../schema/types';
+features/session :: isAuthenticated(): boolean;
+features/session :: login(user: UserIdentity, token: string): void;
+features/session :: logout(): void;
+features/session :: readonly user: Readonly<UserIdentity> | null;
+features/session :: revoke(permission: Permission): void;
+features/session :: subscribe(listener: (user: Readonly<UserIdentity> | null) => void): Unsubscribe;
+features/session :: }
+features/session :: }
+features/theme :: bus: EventBus;
+features/theme :: export declare function createThemeChannel(options: ThemeControllerOptions): ThemeChannel;
+features/theme :: export interface ThemeChannel {
+features/theme :: export interface ThemeControllerOptions {
+features/theme :: immediate?: boolean;
+features/theme :: import type { EventBus } from '../core/event-bus';
+features/theme :: import type { ThemeName, Unsubscribe } from '../schema/types';
+features/theme :: initial?: ThemeName;
+features/theme :: readonly current: ThemeName;
+features/theme :: set(theme: ThemeName): void;
+features/theme :: setAttribute(name: string, value: string): void;
+features/theme :: storageKey?: string;
+features/theme :: subscribe(listener: (theme: ThemeName) => void, options?: {
+features/theme :: target?: {
+features/theme :: toggle(): void;
+features/theme :: }
+features/theme :: }
+features/theme :: } | null;
+features/theme :: }): Unsubscribe;
+index :: export * from './core/create-bridge';
+index :: export * from './core/event-bus';
+index :: export * from './core/global';
+index :: export * from './features/data-cache';
+index :: export * from './features/http';
+index :: export * from './features/operations';
+index :: export * from './features/routing';
+index :: export * from './features/session';
+index :: export * from './features/theme';
+index :: export * from './schema/types';
+schema/types :: 'cache:invalidated': {
+schema/types :: 'cache:updated': {
+schema/types :: 'navigation:request': {
+schema/types :: 'operation:completed': OperationSnapshot;
+schema/types :: 'operation:failed': OperationSnapshot;
+schema/types :: 'operation:progress': OperationSnapshot;
+schema/types :: 'operation:started': OperationSnapshot;
+schema/types :: 'session:changed': {
+schema/types :: 'theme:changed': {
+schema/types :: 'toast:show': ToastPayload;
+schema/types :: cacheKey?: string;
+schema/types :: durationMs?: number;
+schema/types :: email: string;
+schema/types :: error?: string;
+schema/types :: export interface BridgeEventMap {
+schema/types :: export interface OperationSnapshot {
+schema/types :: export interface ToastPayload {
+schema/types :: export interface UserIdentity {
+schema/types :: export type OperationStatus = 'running' | 'completed' | 'failed' | 'cancelled';
+schema/types :: export type Permission = 'analytics:view' | 'analytics:query' | 'reports:view' | 'reports:generate' | 'playground:edit' | 'admin' | (string & {});
+schema/types :: export type ThemeName = 'light' | 'dark';
+schema/types :: export type Unsubscribe = () => void;
+schema/types :: finishedAt?: number;
+schema/types :: id: string;
+schema/types :: id: string;
+schema/types :: id?: string;
+schema/types :: intent: 'info' | 'success' | 'error';
+schema/types :: key: string;
+schema/types :: key: string;
+schema/types :: kind: string;
+schema/types :: message?: string;
+schema/types :: message?: string;
+schema/types :: name: string;
+schema/types :: permissions: Permission[];
+schema/types :: progress: number;
+schema/types :: resultRoute?: string;
+schema/types :: roles: string[];
+schema/types :: route?: string;
+schema/types :: startedAt: number;
+schema/types :: status: OperationStatus;
+schema/types :: theme: ThemeName;
+schema/types :: title: string;
+schema/types :: title: string;
+schema/types :: url: string;
+schema/types :: user: Readonly<UserIdentity> | null;
+schema/types :: }
+schema/types :: }
+schema/types :: }
+schema/types :: }
+schema/types :: };
+schema/types :: };
+schema/types :: };
+schema/types :: };
+schema/types :: };

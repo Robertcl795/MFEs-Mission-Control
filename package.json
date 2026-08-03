@@ -5,7 +5,7 @@
   "description": "Mission Control \u2014 a Module Federation 2.0 + Rsbuild micro-frontend POC built for the agentic era",
   "scripts": {
     "build": "pnpm -r build",
-    "build:contracts": "pnpm --filter @mission/bridge build",
+    "build:contracts": "pnpm --filter @teradata-pe/bridge build",
     "dev": "pnpm build:contracts && pnpm -r --parallel --stream dev",
     "typecheck": "pnpm -r typecheck"
   },

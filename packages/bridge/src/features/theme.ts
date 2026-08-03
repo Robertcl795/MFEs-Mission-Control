@@ -1,5 +1,5 @@
-import type { EventBus } from './event-bus';
-import type { ThemeName, Unsubscribe } from './types';
+import type { EventBus } from '../core/event-bus';
+import type { ThemeName, Unsubscribe } from '../schema/types';
 
 /**
  * Reactive theme channel.
@@ -29,7 +29,7 @@ export interface ThemeControllerOptions {
 }
 
 export function createThemeChannel(options: ThemeControllerOptions): ThemeChannel {
-  const { bus, storageKey = 'mission-control:theme' } = options;
+  const { bus, storageKey = 'up-ui:theme' } = options;
   const target =
     options.target !== undefined
       ? options.target

@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@mission/bridge": "workspace:*",
+    "@teradata-pe/bridge": "workspace:*",
     "@mission/tokens": "workspace:*",
     "monaco-editor": "^0.52.2",
     "react": "^19.0.0",

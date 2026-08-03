@@ -1,4 +1,4 @@
-import type { MissionEventMap, Unsubscribe } from './types';
+import type { BridgeEventMap, Unsubscribe } from '../schema/types';
 
 export type EventHandler<T> = (payload: T) => void;
 
@@ -6,7 +6,7 @@ export type EventHandler<T> = (payload: T) => void;
  * Typed publish/subscribe bus shared by the host and every remote.
  * The host owns the single instance; remotes obtain it via `getBridge().bus`.
  */
-export interface EventBus<TMap extends object = MissionEventMap> {
+export interface EventBus<TMap extends object = BridgeEventMap> {
   on<K extends keyof TMap & string>(event: K, handler: EventHandler<TMap[K]>): Unsubscribe;
   once<K extends keyof TMap & string>(event: K, handler: EventHandler<TMap[K]>): Unsubscribe;
   emit<K extends keyof TMap & string>(event: K, payload: TMap[K]): void;
@@ -14,7 +14,7 @@ export interface EventBus<TMap extends object = MissionEventMap> {
   onAny(handler: (event: string, payload: unknown) => void): Unsubscribe;
 }
 
-export function createEventBus<TMap extends object = MissionEventMap>(): EventBus<TMap> {
+export function createEventBus<TMap extends object = BridgeEventMap>(): EventBus<TMap> {
   const handlers = new Map<string, Set<EventHandler<unknown>>>();
   const anyHandlers = new Set<(event: string, payload: unknown) => void>();
 

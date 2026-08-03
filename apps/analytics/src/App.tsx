@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
-import { getBridge, requirePermission, type ThemeName } from '@mission/bridge';
+import { getBridge, requirePermission, type ThemeName } from '@teradata-pe/bridge';
 import { Protected } from './routing/Protected';
 import { Workbench } from './pages/Workbench';
 import { Insights } from './pages/Insights';
@@ -9,8 +9,8 @@ import './styles.css';
 
 /**
  * Analytics remote root. Rules of the house:
- *  - session/theme/cache/tasks come from the bridge, never from local state;
- *  - route protection uses the SHARED validators from @mission/bridge;
+ *  - session/theme/cache/operations come from the bridge, never from local state;
+ *  - route protection uses the SHARED validators from @teradata-pe/bridge;
  *  - no imports from other remotes, ever.
  */
 export function App({ basename = '/analytics' }: { basename?: string }) {

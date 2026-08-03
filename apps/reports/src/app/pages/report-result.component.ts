@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, type OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 import { MonacoViewerComponent } from '../shared/monaco-viewer.component';
 import { reportCacheKey, type FleetReport } from '../data/report-generator';
 
@@ -15,7 +15,7 @@ import { reportCacheKey, type FleetReport } from '../data/report-generator';
         <section class="mcr-card">
           <h2>{{ r.title }}</h2>
           <div class="mcr-badge mcr-badge-success" data-testid="result-cache-note">
-            ⚡ Loaded instantly from the shared DataCache (key <code>{{ cacheKey() }}</code>)
+            ⚡ Loaded instantly from the shared SharedDataCache (key <code>{{ cacheKey() }}</code>)
           </div>
           <p>{{ r.summary }}</p>
           <p class="mcr-muted">Generated {{ r.generatedAt }} · requested by {{ r.requestedBy }}</p>
@@ -25,7 +25,7 @@ import { reportCacheKey, type FleetReport } from '../data/report-generator';
         <section class="mcr-card">
           <h2>Result not in cache</h2>
           <p class="mcr-muted">
-            This report isn't in the DataCache — it may have expired or the page was hard-reloaded (the POC cache
+            This report isn't in the SharedDataCache — it may have expired or the page was hard-reloaded (the POC cache
             is in-memory). Generate a new one.
           </p>
           <a routerLink="../../generate">← Back to generation</a>

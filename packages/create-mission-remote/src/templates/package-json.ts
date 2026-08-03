@@ -66,7 +66,7 @@ export function packageJson(spec: RemoteSpec): string {
     },
     dependencies: sorted({
       // The ONLY sanctioned global-communication channel between MFEs.
-      '@mission/bridge': PLATFORM_DEP_VERSION,
+      '@teradata-pe/bridge': PLATFORM_DEP_VERSION,
       ...fw.dependencies,
     }),
     devDependencies: sorted({

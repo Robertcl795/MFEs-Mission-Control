@@ -3,7 +3,7 @@ import type { Routes } from '@angular/router';
 // Ships the remote's styles inside the federated chunk — the shell never
 // loads this app's index entry, so CSS must travel with the exposed module.
 import '../../reports-theme.css';
-import { requirePermission } from '@mission/bridge';
+import { requirePermission } from '@teradata-pe/bridge';
 import { bridgeGuard } from '../shared/bridge-guard';
 import { missionAuthInterceptor } from '../shared/mission-auth.interceptor';
 import { ReportsShellComponent } from '../pages/reports-shell.component';
@@ -18,7 +18,7 @@ import { ReportsAdminComponent } from '../pages/reports-admin.component';
  *
  * The shell lazy-loads this Routes array straight into its router. Every
  * guard below is a thin Angular adapter over the framework-agnostic
- * validators exported by @mission/bridge, and the HTTP interceptor is the
+ * validators exported by @teradata-pe/bridge, and the HTTP interceptor is the
  * bridge auth enrichment wrapped as an HttpInterceptorFn.
  */
 export const REPORTS_ROUTES: Routes = [

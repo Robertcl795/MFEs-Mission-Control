@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, type OnDestroy, type OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { getBridge, type TaskSnapshot, type Unsubscribe } from '@mission/bridge';
+import { getBridge, type OperationSnapshot, type Unsubscribe } from '@teradata-pe/bridge';
 import { startReportGeneration } from '../data/report-generator';
 
 @Component({
@@ -18,29 +18,29 @@ import { startReportGeneration } from '../data/report-generator';
           </button>
         </header>
         <p class="mcr-muted">
-          The job runs in the <strong>host's</strong> TaskManager. Navigate to Analytics mid-run — polling keeps
+          The job runs in the <strong>host's</strong> AsyncOperationManager. Navigate to Analytics mid-run — polling keeps
           going, and the shell raises a clickable toast when the report lands in the shared cache.
         </p>
       </section>
 
       <section class="mcr-card">
-        <h3>Task log</h3>
-        @if (tasks().length === 0) {
+        <h3>Operation log</h3>
+        @if (operations().length === 0) {
           <p class="mcr-muted">No report jobs yet this session.</p>
         }
-        @for (task of tasks(); track task.id) {
+        @for (operation of operations(); track operation.id) {
           <div class="mcr-task" data-testid="task-row">
             <div class="mcr-task-head">
-              <span class="mcr-task-title">{{ task.title }} <code>{{ task.id }}</code></span>
-              <span class="mcr-task-status mcr-task-{{ task.status }}">{{ task.status }}</span>
+              <span class="mcr-task-title">{{ operation.title }} <code>{{ operation.id }}</code></span>
+              <span class="mcr-task-status mcr-task-{{ operation.status }}">{{ operation.status }}</span>
             </div>
             <div class="mcr-progress">
-              <div class="mcr-progress-bar" [style.width.%]="task.progress"></div>
+              <div class="mcr-progress-bar" [style.width.%]="operation.progress"></div>
             </div>
             <div class="mcr-task-foot">
-              <span class="mcr-muted">{{ task.message ?? task.error ?? '' }}</span>
-              @if (task.status === 'completed' && task.resultRoute) {
-                <a [routerLink]="resultLink(task)">Open result →</a>
+              <span class="mcr-muted">{{ operation.message ?? operation.error ?? '' }}</span>
+              @if (operation.status === 'completed' && operation.resultRoute) {
+                  <a [routerLink]="resultLink(operation)">Open result →</a>
               }
             </div>
           </div>
@@ -50,17 +50,17 @@ import { startReportGeneration } from '../data/report-generator';
   `,
 })
 export class GenerateReportComponent implements OnInit, OnDestroy {
-  readonly tasks = signal<TaskSnapshot[]>([]);
+  readonly operations = signal<OperationSnapshot[]>([]);
   private off?: Unsubscribe;
 
   ngOnInit(): void {
-    const { tasks } = getBridge();
+    const { operations } = getBridge();
     this.refresh();
-    this.off = tasks.subscribe(() => this.refresh());
+    this.off = operations.subscribe(() => this.refresh());
   }
 
   ngOnDestroy(): void {
-    // Only the SUBSCRIPTION dies with this component — the tasks don't.
+    // Only the subscription dies with this component; operations do not.
     this.off?.();
   }
 
@@ -68,15 +68,15 @@ export class GenerateReportComponent implements OnInit, OnDestroy {
     startReportGeneration();
   }
 
-  resultLink(task: TaskSnapshot): string[] {
-    return ['..', 'results', task.id];
+  resultLink(operation: OperationSnapshot): string[] {
+    return ['..', 'results', operation.id];
   }
 
   private refresh(): void {
     const list = getBridge()
-      .tasks.list()
-      .filter((task) => task.kind === 'report:generate')
+      .operations.list()
+      .filter((operation) => operation.kind === 'report:generate')
       .sort((a, b) => b.startedAt - a.startedAt);
-    this.tasks.set(list);
+    this.operations.set(list);
   }
 }

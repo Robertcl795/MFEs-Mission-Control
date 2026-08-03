@@ -1,5 +1,5 @@
-import type { EventBus } from './event-bus';
-import type { MissionUser, Permission, Unsubscribe } from './types';
+import type { EventBus } from '../core/event-bus';
+import type { Permission, Unsubscribe, UserIdentity } from '../schema/types';
 
 /**
  * Read-only view of the authenticated session, handed to remotes.
@@ -10,40 +10,40 @@ import type { MissionUser, Permission, Unsubscribe } from './types';
  *    authenticated request it calls `authorizeRequest`, which enriches the
  *    request from a closure held inside the host.
  */
-export interface SessionFacade {
+export interface AuthSession {
   /** Current user, or null when signed out. Frozen — remotes cannot mutate it. */
-  readonly user: Readonly<MissionUser> | null;
+  readonly user: Readonly<UserIdentity> | null;
   isAuthenticated(): boolean;
   /** Permission check used by remotes to show/hide UI and guard routes. */
   can(permission: Permission): boolean;
   /** Enrich an outgoing request with auth headers. The token never leaves the host closure as state. */
   authorizeRequest(init?: RequestInit): Promise<RequestInit>;
   /** Notifies on login/logout/permission changes. */
-  subscribe(listener: (user: Readonly<MissionUser> | null) => void): Unsubscribe;
+  subscribe(listener: (user: Readonly<UserIdentity> | null) => void): Unsubscribe;
 }
 
 /** Host-only handle: the shell keeps this and never exposes it on the bridge. */
-export interface SessionController {
-  facade: SessionFacade;
-  login(user: MissionUser, token: string): void;
+export interface AuthSessionController {
+  facade: AuthSession;
+  login(user: UserIdentity, token: string): void;
   logout(): void;
   grant(permission: Permission): void;
   revoke(permission: Permission): void;
 }
 
-export function createSessionController(bus: EventBus): SessionController {
-  let user: Readonly<MissionUser> | null = null;
+export function createAuthSessionController(bus: EventBus): AuthSessionController {
+  let user: Readonly<UserIdentity> | null = null;
   // The token lives ONLY in this closure. It is intentionally unreachable
-  // from the SessionFacade surface that remotes receive.
+  // from the AuthSession surface that remotes receive.
   let token: string | null = null;
-  const listeners = new Set<(user: Readonly<MissionUser> | null) => void>();
+  const listeners = new Set<(user: Readonly<UserIdentity> | null) => void>();
 
   const notify = () => {
     listeners.forEach((listener) => listener(user));
     bus.emit('session:changed', { user });
   };
 
-  const facade: SessionFacade = {
+  const facade: AuthSession = {
     get user() {
       return user;
     },
@@ -55,7 +55,7 @@ export function createSessionController(bus: EventBus): SessionController {
         headers.set('Authorization', `Bearer ${token}`);
       }
       if (user) {
-        headers.set('X-Mission-User', user.id);
+        headers.set('X-User-Id', user.id);
       }
       return { ...init, headers };
     },

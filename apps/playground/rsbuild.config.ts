@@ -29,7 +29,7 @@ export default defineConfig({
       },
       shared: {
         svelte: { singleton: true, requiredVersion: '^5.0.0' },
-        '@mission/bridge': { singleton: true, requiredVersion: false },
+        '@teradata-pe/bridge': { singleton: true, requiredVersion: false },
         // ONE Monaco for the whole federation — required by the architecture.
         'monaco-editor': { singleton: true, requiredVersion: '^0.52.0' },
       },

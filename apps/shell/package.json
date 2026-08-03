@@ -15,7 +15,7 @@
     "@angular/core": "~20.3.0",
     "@angular/platform-browser": "~20.3.0",
     "@angular/router": "~20.3.0",
-    "@mission/bridge": "workspace:*",
+    "@teradata-pe/bridge": "workspace:*",
     "@mission/tokens": "workspace:*",
     "@module-federation/enhanced": "^2.7.0",
     "rxjs": "^7.8.1",

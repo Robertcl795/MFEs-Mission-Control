@@ -31,11 +31,8 @@ export default () =>
         // POC: remote types are hand-declared (remotes.d.ts); generated
         // @mf-types churn re-triggers the dev watcher and causes HMR loops.
         dts: false,
-        remotes: {
-          analytics: 'analytics@http://localhost:4201/mf-manifest.json',
-          playground: 'playground@http://localhost:4204/mf-manifest.json',
-          reports: 'reports@http://localhost:4203/mf-manifest.json',
-        },
+        // No build-time remotes: the shell registers them at boot from the
+        // environment registry (src/app/remote-registry.ts, ADR-003).
         shared: {
           '@angular/core': { singleton: true, requiredVersion: '^20.0.0' },
           '@angular/common': { singleton: true, requiredVersion: '^20.0.0' },
@@ -43,7 +40,7 @@ export default () =>
           '@angular/router': { singleton: true, requiredVersion: '^20.0.0' },
           '@angular/platform-browser': { singleton: true, requiredVersion: '^20.0.0' },
           rxjs: { singleton: true, requiredVersion: '^7.8.0' },
-          '@mission/bridge': { singleton: true, requiredVersion: false },
+          '@teradata-pe/bridge': { singleton: true, requiredVersion: false },
           'monaco-editor': { singleton: true, requiredVersion: '^0.52.0' },
         },
       },

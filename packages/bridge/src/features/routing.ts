@@ -1,5 +1,5 @@
-import type { SessionFacade } from './session';
-import type { Permission } from './types';
+import type { AuthSession } from './session';
+import type { Permission } from '../schema/types';
 
 /**
  * Framework-agnostic route protection.
@@ -9,7 +9,7 @@ import type { Permission } from './types';
  * `<Protected>` component — but the RULES live here, once.
  */
 export interface RouteContext {
-  session: SessionFacade;
+  session: AuthSession;
   /** The path being activated, for logging / audit. */
   path: string;
 }
@@ -51,7 +51,7 @@ export function composeValidators(...validators: RouteValidator[]): RouteValidat
 }
 
 /** Convenience for adapters. */
-export function evaluateRoute(validator: RouteValidator, session: SessionFacade, path: string): RouteDecision {
+export function evaluateRoute(validator: RouteValidator, session: AuthSession, path: string): RouteDecision {
   const decision = validator({ session, path });
   if (!decision.allowed) {
     console.warn(`[bridge:routing] blocked "${path}": ${decision.reason ?? 'no reason given'}`);

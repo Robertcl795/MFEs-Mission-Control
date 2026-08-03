@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, type OnDestroy, type OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { getBridge, type MissionUser, type Unsubscribe } from '@mission/bridge';
+import { getBridge, type UserIdentity, type Unsubscribe } from '@teradata-pe/bridge';
 
 @Component({
   selector: 'mcr-reports-shell',
@@ -30,14 +30,14 @@ import { getBridge, type MissionUser, type Unsubscribe } from '@mission/bridge';
   `,
 })
 export class ReportsShellComponent implements OnInit, OnDestroy {
-  readonly user = signal<Readonly<MissionUser> | null>(null);
+  readonly user = signal<Readonly<UserIdentity> | null>(null);
   readonly canGenerate = signal(false);
   readonly isAdmin = signal(false);
   private off?: Unsubscribe;
 
   ngOnInit(): void {
     const { session } = getBridge();
-    const refresh = (user: Readonly<MissionUser> | null) => {
+    const refresh = (user: Readonly<UserIdentity> | null) => {
       this.user.set(user);
       // UI gating through the session facade — the routes themselves stay
       // guarded by the same bridge validators regardless.

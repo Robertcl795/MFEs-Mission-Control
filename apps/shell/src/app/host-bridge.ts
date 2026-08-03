@@ -1,27 +1,27 @@
 import {
-  createMissionBridge,
+  createBridge,
   installBridge,
-  type MissionBridge,
-  type SessionController,
-} from '@mission/bridge';
+  type UiBridge,
+  type AuthSessionController,
+} from '@teradata-pe/bridge';
 
 /**
  * Host-side bridge composition. The SHELL owns:
  *  - authentication (the token lives in the session controller's closure);
  *  - the theme side-effect (html[data-theme]);
- *  - the DataCache and TaskManager singletons.
+ *  - the SharedDataCache and AsyncOperationManager singletons.
  *
- * `sessionController` is deliberately NOT installed on the bridge: remotes
- * get the read-only SessionFacade, only the shell can login/grant/revoke.
+ * `authSessionController` is deliberately NOT installed on the bridge: remotes
+ * get the read-only AuthSession, only the shell can login/grant/revoke.
  */
-let controller: SessionController | undefined;
-let bridge: MissionBridge | undefined;
+let controller: AuthSessionController | undefined;
+let bridge: UiBridge | undefined;
 
-export function initHostBridge(): MissionBridge {
+export function initHostBridge(): UiBridge {
   if (bridge) return bridge;
 
-  const kit = createMissionBridge({ initialTheme: 'dark' });
-  controller = kit.sessionController;
+  const kit = createBridge({ initialTheme: 'dark' });
+  controller = kit.authSessionController;
   bridge = installBridge(kit.bridge);
 
   // POC: authenticate a mock operator. Note: no `admin` permission — use
@@ -41,7 +41,7 @@ export function initHostBridge(): MissionBridge {
 }
 
 /** Shell-internal only. Throws if a remote somehow imports this module. */
-export function getSessionController(): SessionController {
+export function getAuthSessionController(): AuthSessionController {
   if (!controller) throw new Error('[shell] host bridge not initialised');
   return controller;
 }

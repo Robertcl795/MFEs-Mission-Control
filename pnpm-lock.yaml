@@ -10,12 +10,12 @@ importers:
 
   apps/analytics:
     dependencies:
-      '@mission/bridge':
-        specifier: workspace:*
-        version: link:../../packages/bridge
       '@mission/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@teradata-pe/bridge':
+        specifier: workspace:*
+        version: link:../../packages/bridge
       monaco-editor:
         specifier: ^0.52.2
         version: 0.52.2
@@ -50,12 +50,12 @@ importers:
 
   apps/playground:
     dependencies:
-      '@mission/bridge':
-        specifier: workspace:*
-        version: link:../../packages/bridge
       '@mission/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@teradata-pe/bridge':
+        specifier: workspace:*
+        version: link:../../packages/bridge
       dompurify:
         specifier: ^3.4.0
         version: 3.4.12
@@ -99,12 +99,12 @@ importers:
       '@angular/router':
         specifier: ~20.3.0
         version: 20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
-      '@mission/bridge':
-        specifier: workspace:*
-        version: link:../../packages/bridge
       '@mission/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@teradata-pe/bridge':
+        specifier: workspace:*
+        version: link:../../packages/bridge
       monaco-editor:
         specifier: ^0.52.2
         version: 0.52.2
@@ -154,15 +154,15 @@ importers:
       '@angular/router':
         specifier: ~20.3.0
         version: 20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.26(@angular/common@20.3.26(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.26(@angular/compiler@20.3.26)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
-      '@mission/bridge':
-        specifier: workspace:*
-        version: link:../../packages/bridge
       '@mission/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
       '@module-federation/enhanced':
         specifier: ^2.7.0
         version: 2.7.0(@rspack/core@1.7.12(@swc/helpers@0.5.23))(typescript@5.8.3)
+      '@teradata-pe/bridge':
+        specifier: workspace:*
+        version: link:../../packages/bridge
       rxjs:
         specifier: ^7.8.1
         version: 7.8.2

@@ -9,7 +9,7 @@ export type FileMap = Record<string, string>;
  */
 export function entryFile(spec: RemoteSpec): string {
   return `// MF 2.0 async boundary — MANDATORY. Do not "simplify" this into a direct
-// import: shared singletons (@mission/bridge, framework runtimes) must be
+// import: shared singletons (@teradata-pe/bridge, framework runtimes) must be
 // negotiated before the first shared module executes, otherwise the remote
 // dies with \`loadShareSync failed\`.
 void import('./bootstrap');
@@ -25,7 +25,7 @@ function devBridgeBlock(spec: RemoteSpec): string {
   return `if (!hasBridge()) {
   // Standalone dev only — when federated, the shell installs the real bridge
   // before this remote loads and this block never runs.
-  const { bridge } = createMissionBridge({
+  const { bridge } = createBridge({
     initialTheme: 'dark',
     initialUser: {
       user: {
@@ -49,7 +49,7 @@ function reactFiles(spec: RemoteSpec): FileMap {
   return {
     'src/index.ts': entryFile(spec),
 
-    'src/bootstrap.tsx': `import { createMissionBridge, hasBridge, installBridge } from '@mission/bridge';
+    'src/bootstrap.tsx': `import { createBridge, hasBridge, installBridge } from '@teradata-pe/bridge';
 import { mount } from './mount';
 
 ${devBridgeBlock(spec)}
@@ -78,7 +78,7 @@ export default mount;
 `,
 
     'src/App.tsx': `import { useSyncExternalStore } from 'react';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 
 /**
  * Native adapter over the bridge ThemeChannel — the sanctioned pattern for
@@ -98,7 +98,7 @@ export function App() {
   return (
     <section data-theme={theme} style={{ padding: '2rem', fontFamily: 'system-ui' }}>
       <h1>${spec.name}</h1>
-      <p>React remote · MF 2.0 · global state via @mission/bridge</p>
+      <p>React remote · MF 2.0 · global state via @teradata-pe/bridge</p>
       <p>
         Current theme: <strong>{theme}</strong>{' '}
         <button type="button" onClick={() => getBridge().theme.toggle()}>
@@ -118,7 +118,7 @@ function svelteFiles(spec: RemoteSpec): FileMap {
   return {
     'src/index.ts': entryFile(spec),
 
-    'src/bootstrap.ts': `import { createMissionBridge, hasBridge, installBridge } from '@mission/bridge';
+    'src/bootstrap.ts': `import { createBridge, hasBridge, installBridge } from '@teradata-pe/bridge';
 import { mount } from './mount';
 
 ${devBridgeBlock(spec)}
@@ -148,7 +148,7 @@ export default mount;
 `,
 
     'src/App.svelte': `<script lang="ts">
-  import { getBridge, type ThemeName } from '@mission/bridge';
+  import { getBridge, type ThemeName } from '@teradata-pe/bridge';
 
   // Native adapter over the bridge ThemeChannel — the sanctioned pattern for
   // consuming ANY global state in this remote (no local writable() copies).
@@ -160,7 +160,7 @@ export default mount;
 
 <section data-theme={current} style="padding: 2rem; font-family: system-ui;">
   <h1>${spec.name}</h1>
-  <p>Svelte remote · MF 2.0 · global state via @mission/bridge</p>
+  <p>Svelte remote · MF 2.0 · global state via @teradata-pe/bridge</p>
   <p>
     Current theme: <strong>{current}</strong>
     <button type="button" onclick={() => theme.toggle()}>Toggle theme</button>
@@ -185,7 +185,7 @@ function angularFiles(spec: RemoteSpec): FileMap {
 
     'src/bootstrap.ts': `import 'zone.js';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { createMissionBridge, hasBridge, installBridge } from '@mission/bridge';
+import { createBridge, hasBridge, installBridge } from '@teradata-pe/bridge';
 import { AppComponent } from './app/app.component';
 
 ${devBridgeBlock(spec)}
@@ -194,7 +194,7 @@ void bootstrapApplication(AppComponent).catch((err) => console.error(err));
 `,
 
     'src/app/app.component.ts': `import { ChangeDetectionStrategy, Component, type OnDestroy, signal } from '@angular/core';
-import { getBridge, type ThemeName } from '@mission/bridge';
+import { getBridge, type ThemeName } from '@teradata-pe/bridge';
 
 /**
  * Native adapter over the bridge ThemeChannel — the sanctioned pattern for
@@ -239,7 +239,7 @@ import { AppComponent } from './app.component';
  * Federation surface: the shell lazy-loads this array via
  * \`loadChildren: () => loadRemote('${spec.mfName}/routes')\`, so guards and
  * route-level providers travel with the routes. Guards must compose
- * validators from @mission/bridge — never hand-rolled permission checks.
+ * validators from @teradata-pe/bridge — never hand-rolled permission checks.
  */
 export const routes: Routes = [{ path: '', component: AppComponent }];
 

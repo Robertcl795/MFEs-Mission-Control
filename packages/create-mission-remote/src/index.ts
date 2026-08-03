@@ -75,7 +75,7 @@ async function main(): Promise<void> {
   p.intro(pc.bgCyan(pc.black(' create-mission-remote ')));
   p.log.message(
     `Governance by contract, freedom by implementation.\n` +
-      `Rsbuild + MF 2.0 · state via ${pc.cyan('@mission/bridge')} · agent context wired to ${pc.cyan(MCP_SERVER_URL)}`,
+      `Rsbuild + MF 2.0 · state via ${pc.cyan('@teradata-pe/bridge')} · agent context wired to ${pc.cyan(MCP_SERVER_URL)}`,
   );
 
   // ---- remoteName ---------------------------------------------------------

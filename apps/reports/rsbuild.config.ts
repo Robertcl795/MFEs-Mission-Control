@@ -40,7 +40,7 @@ export default () =>
           '@angular/router': { singleton: true, requiredVersion: '^20.0.0' },
           '@angular/platform-browser': { singleton: true, requiredVersion: '^20.0.0' },
           rxjs: { singleton: true, requiredVersion: '^7.8.0' },
-          '@mission/bridge': { singleton: true, requiredVersion: false },
+          '@teradata-pe/bridge': { singleton: true, requiredVersion: false },
           'monaco-editor': { singleton: true, requiredVersion: '^0.52.0' },
         },
       },

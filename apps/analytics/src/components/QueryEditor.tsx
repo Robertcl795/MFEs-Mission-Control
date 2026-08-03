@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as monaco from 'monaco-editor';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 import { setupMonacoWorkers } from '../monaco/setup';
 
 interface QueryEditorProps {

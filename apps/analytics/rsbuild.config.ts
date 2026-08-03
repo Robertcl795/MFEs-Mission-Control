@@ -7,7 +7,7 @@ import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
  *
  * Exposes a framework-agnostic `mount(el, options)` so the Angular shell
  * never touches React APIs. All cross-app state flows through the shared
- * `@mission/bridge` singleton.
+ * `@teradata-pe/bridge` singleton.
  */
 export default defineConfig({
   plugins: [
@@ -24,8 +24,8 @@ export default defineConfig({
         react: { singleton: true, requiredVersion: '^19.0.0' },
         'react-dom': { singleton: true, requiredVersion: '^19.0.0' },
         // The bridge is version-agnostic within the workspace; identity is
-        // additionally pinned via a globalThis symbol (see @mission/bridge).
-        '@mission/bridge': { singleton: true, requiredVersion: false },
+        // additionally pinned via a globalThis symbol (see @teradata-pe/bridge).
+        '@teradata-pe/bridge': { singleton: true, requiredVersion: false },
         // ONE Monaco for the whole federation — required by the architecture.
         'monaco-editor': { singleton: true, requiredVersion: '^0.52.0' },
       },

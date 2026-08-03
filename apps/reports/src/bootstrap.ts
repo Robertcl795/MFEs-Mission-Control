@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, RouterOutlet } from '@angular/router';
-import { createMissionBridge, hasBridge, installBridge } from '@mission/bridge';
+import { createBridge, hasBridge, installBridge } from '@teradata-pe/bridge';
 import { REPORTS_ROUTES } from './app/remote-entry/routes';
 
 /**
@@ -10,7 +10,7 @@ import { REPORTS_ROUTES } from './app/remote-entry/routes';
  * so the remote honours the same contracts without a host.
  */
 if (!hasBridge()) {
-  const { bridge } = createMissionBridge({
+  const { bridge } = createBridge({
     initialTheme: 'dark',
     initialUser: {
       user: {
@@ -45,7 +45,7 @@ class StandaloneRootComponent {}
   selector: 'mcr-standalone-forbidden',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<p>403 — blocked by a @mission/bridge validator (standalone harness).</p>`,
+  template: `<p>403 — blocked by a @teradata-pe/bridge validator (standalone harness).</p>`,
 })
 class StandaloneForbiddenComponent {}
 

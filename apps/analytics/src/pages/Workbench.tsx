@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 import { QueryEditor } from '../components/QueryEditor';
 import { isFleetDataCached, loadFleetData, type FleetRecord } from '../data/fleet';
 
@@ -56,7 +56,7 @@ export function Workbench() {
           data-testid="cache-indicator"
         >
           {runInfo.fromCache
-            ? `⚡ Served from the shared DataCache in ${runInfo.ms}ms — no duplicate network request`
+            ? `⚡ Served from the shared SharedDataCache in ${runInfo.ms}ms — no duplicate network request`
             : `🛰 Fetched over the (mock) network in ${runInfo.ms}ms — now cached for every remote`}
         </div>
       )}

@@ -1,7 +1,7 @@
 {
-  "name": "@mission/bridge",
+  "name": "@teradata-pe/bridge",
   "version": "0.1.0",
-  "description": "Framework-agnostic contracts for Mission Control: event bus, session facade, theme channel, SWR data cache, persistent task manager, route validators and HTTP interceptors.",
+  "description": "Framework-agnostic UI integration contracts: event bus, authenticated session, theme channel, shared SWR data cache, asynchronous operations, route validators and HTTP interceptors.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -13,11 +13,17 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "etc/api-baseline.txt"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "contract-check": "node scripts/contract-check.mjs",
     "dev": "tsc -p tsconfig.json --watch --preserveWatchOutput",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

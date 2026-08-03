@@ -1,5 +1,5 @@
-import type { EventBus } from './event-bus';
-import type { Unsubscribe } from './types';
+import type { EventBus } from '../core/event-bus';
+import type { Unsubscribe } from '../schema/types';
 
 export interface CacheEntry<T = unknown> {
   key: string;
@@ -21,12 +21,12 @@ export interface SwrOptions {
 /**
  * Host-owned stale-while-revalidate cache shared by all remotes.
  *
- * CONTRACT: keys are a shared namespace (`fleet-data`, `task:<id>:result`, ...).
+ * CONTRACT: keys are a shared namespace (`fleet-data`, `operation:<id>:result`, ...).
  * Two remotes requesting the same key concurrently — or within the freshness
  * window — trigger exactly ONE network request. In-flight promises are
  * deduped, so navigating reports → analytics never refetches `fleet-data`.
  */
-export interface DataCache {
+export interface SharedDataCache {
   /** SWR read-through: cached value when fresh, deduped fetch otherwise. */
   fetch<T>(key: string, fetcher: () => Promise<T>, options?: SwrOptions): Promise<T>;
   /** Synchronous peek without side effects (no revalidation). */
@@ -44,7 +44,7 @@ interface InternalEntry {
   storedAt: number;
 }
 
-export function createDataCache(bus: EventBus): DataCache {
+export function createSharedDataCache(bus: EventBus): SharedDataCache {
   const store = new Map<string, InternalEntry>();
   const inFlight = new Map<string, Promise<unknown>>();
   const listeners = new Map<string, Set<(entry: CacheEntry | undefined) => void>>();

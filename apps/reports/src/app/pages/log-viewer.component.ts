@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, type OnInit, signal } from '@angular/core';
-import { getBridge } from '@mission/bridge';
+import { getBridge } from '@teradata-pe/bridge';
 import { MonacoViewerComponent } from '../shared/monaco-viewer.component';
 import { FLEET_CACHE_KEY, isFleetDataCached, loadFleetData } from '../data/fleet';
 
@@ -19,7 +19,7 @@ import { FLEET_CACHE_KEY, isFleetDataCached, loadFleetData } from '../data/fleet
           <div class="mcr-badge" [class.mcr-badge-success]="info.fromCache" data-testid="cache-indicator">
             {{
               info.fromCache
-                ? '⚡ Served from the shared DataCache in ' + info.ms + 'ms — no duplicate network request'
+                ? '⚡ Served from the shared SharedDataCache in ' + info.ms + 'ms — no duplicate network request'
                 : '🛰 Fetched over the (mock) network in ' + info.ms + 'ms — now cached for every remote'
             }}
           </div>

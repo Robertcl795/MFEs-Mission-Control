@@ -68,7 +68,7 @@ pnpm typecheck
 
 - **Federation surface:** \`${surface}\` (declared in \`rsbuild.config.ts\`). The
   shell consumes it via \`${spec.mfName}@http://localhost:${spec.port}/mf-manifest.json\`.
-- **Global state:** ONLY through \`@mission/bridge\` (\`getBridge()\`). Session,
+- **Global state:** ONLY through \`@teradata-pe/bridge\` (\`getBridge()\`). Session,
   theme, events, shared data and tasks are host-owned contracts.
 - **Build policy:** owned by \`@mission/rsbuild-${spec.framework}\` — shared
   singleton map, CORS, assetPrefix and manifest emission are not configured here.

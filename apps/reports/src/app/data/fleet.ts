@@ -4,7 +4,7 @@ import {
   createOriginInterceptor,
   getBridge,
   type HttpClient,
-} from '@mission/bridge';
+} from '@teradata-pe/bridge';
 
 export interface FleetRecord {
   id: string;
@@ -18,7 +18,7 @@ export interface FleetRecord {
 
 /**
  * SAME cache key as the analytics remote — that's the whole point: the
- * DataCache dedupes by key, so whichever remote asks first pays the network
+ * SharedDataCache dedupes by key, so whichever remote asks first pays the network
  * cost and the other one reads it instantly.
  */
 export const FLEET_CACHE_KEY = 'fleet-data';
@@ -26,7 +26,7 @@ export const FLEET_CACHE_KEY = 'fleet-data';
 function mockTransport(url: string, init: RequestInit): Promise<Response> {
   const headers = new Headers(init.headers);
   console.info(
-    `[reports] NETWORK ${url} (auth=${headers.has('Authorization') ? 'yes' : 'no'}, app=${headers.get('X-Mission-App')})`,
+    `[reports] NETWORK ${url} (auth=${headers.has('Authorization') ? 'yes' : 'no'}, app=${headers.get('X-Remote-App')})`,
   );
   const vessels: Array<[string, string]> = [
     ['Meridian', 'Explorer'],

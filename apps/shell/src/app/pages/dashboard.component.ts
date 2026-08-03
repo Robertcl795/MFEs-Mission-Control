@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, type OnDestroy, type OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { getBridge, type Unsubscribe } from '@mission/bridge';
+import { getBridge, type Unsubscribe } from '@teradata-pe/bridge';
 
 interface BusLogEntry {
   at: string;
@@ -18,7 +18,7 @@ interface BusLogEntry {
       <section class="hero">
         <h1>Welcome back, {{ userName() }}.</h1>
         <p>
-          This shell is a <em>host, not a feature app</em>: it owns the bridge (session, theme, cache, tasks,
+          This shell is a <em>host, not a feature app</em>: it owns the bridge (session, theme, cache, operations,
           events), the layout and global toasts. Everything else lives in federated remotes.
         </p>
         <div class="hero-links">
@@ -41,16 +41,16 @@ interface BusLogEntry {
         <h2>Try the cross-remote demos</h2>
         <ol class="demo-list">
           <li><strong>Shared cache:</strong> open Reports → “Data viewer” (fetches <code>fleet-data</code>), then Analytics → “Run query”. The second load is instant — one network request for the whole federation.</li>
-          <li><strong>Persistent tasks:</strong> start a report in Reports → “Generate”, immediately navigate to Analytics. Polling continues in the host; a toast appears here when it finishes — click it to open the cached result.</li>
+          <li><strong>Persistent operations:</strong> start a report in Reports → “Generate”, immediately navigate to Analytics. Polling continues in the host; a toast appears here when it finishes — click it to open the cached result.</li>
           <li><strong>Global theme:</strong> hit the theme button above. Both remotes — and every Monaco editor (React and Angular) — flip between <code>vs</code> and <code>vs-dark</code>.</li>
-          <li><strong>Route guards:</strong> toggle <code>admin</code> in the header, then visit Reports → “Admin”. The same <code>@mission/bridge</code> validator guards the React admin tab.</li>
+          <li><strong>Route guards:</strong> toggle <code>admin</code> in the header, then visit Reports → “Admin”. The same <code>@teradata-pe/bridge</code> validator guards the React admin tab.</li>
           <li><strong>Sanitized canvas:</strong> in Playground (Svelte), edit <code>index.html</code>/<code>styles.css</code> — Monaco flips syntax per file, and the canvas renders the documents through DOMPurify + a CSS filter. “Insert fleet table” reuses the shared <code>fleet-data</code> cache entry.</li>
         </ol>
       </section>
 
       <section class="panel">
         <h2>Bridge event bus <span class="live-dot"></span></h2>
-        <p class="muted">Live feed of cross-MFE traffic (contract: <code>MissionEventMap</code>)</p>
+        <p class="muted">Live feed of cross-MFE traffic (contract: <code>BridgeEventMap</code>)</p>
         @if (log().length === 0) {
           <p class="muted">No events yet — interact with a remote.</p>
         }

@@ -8,7 +8,7 @@ a running repo:
   (`@mission/rsbuild-angular` / `-react` / `-svelte`) — the remote's config
   declares only `name`, `port` and `exposes`; the shared singleton map, CORS,
   assetPrefix and `mf-manifest.json` emission are platform-owned.
-- **`@mission/bridge` wiring** — boilerplate that consumes the ThemeChannel
+- **`@teradata-pe/bridge` wiring** — boilerplate that consumes the ThemeChannel
   through the framework's *native* adapter (`useSyncExternalStore`, Svelte
   runes, Angular signals) and installs a local dev bridge for standalone dev.
 - **Agentic scaffolding** — `.cursorrules` + `CLAUDE.md` telling local AI
@@ -42,7 +42,7 @@ create-mission-remote billing --framework react --port 4205 --ci github --yes
 
 ```
 <name>/
-├── package.json              # @mission/bridge + framework deps + platform preset
+├── package.json              # @teradata-pe/bridge + framework deps + platform preset
 ├── rsbuild.config.ts         # createMissionRemote({ name, port, exposes })
 ├── tsconfig.json
 ├── .cursorrules              # AI agent contract (framework-specific)
@@ -54,7 +54,7 @@ create-mission-remote billing --framework react --port 4205 --ci github --yes
     ├── index.ts              # MF 2.0 async boundary (mandatory)
     ├── bootstrap.*           # standalone dev bridge + mount
     ├── mount.* / app/routes.ts   # the federation surface
-    └── App.* / app/app.component.ts  # theme demo via @mission/bridge
+    └── App.* / app/app.component.ts  # theme demo via @teradata-pe/bridge
 ```
 
 Dashes in the remote name are preserved for the folder/package but converted

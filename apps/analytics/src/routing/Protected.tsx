@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
-import { evaluateRoute, getBridge, type RouteValidator } from '@mission/bridge';
+import { evaluateRoute, getBridge, type RouteValidator } from '@teradata-pe/bridge';
 
 /**
  * React adapter over the framework-agnostic bridge route validators.
- * The RULES (auth, permissions) live in @mission/bridge — this component
+ * The RULES (auth, permissions) live in @teradata-pe/bridge — this component
  * only translates a RouteDecision into React rendering.
  */
 export function Protected({ validator, children }: { validator: RouteValidator; children: ReactNode }) {
@@ -19,7 +19,7 @@ export function Protected({ validator, children }: { validator: RouteValidator; 
       <h2>Access denied</h2>
       <p>{decision.reason ?? 'You do not have permission to view this page.'}</p>
       <p className="mc-muted">
-        Decision made by <code>@mission/bridge</code> route validators — the same rules protect the Angular
+        Decision made by <code>@teradata-pe/bridge</code> route validators — the same rules protect the Angular
         `reports` remote.
       </p>
     </section>

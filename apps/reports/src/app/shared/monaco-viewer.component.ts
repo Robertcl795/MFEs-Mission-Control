@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import * as monaco from 'monaco-editor';
-import { getBridge, type Unsubscribe } from '@mission/bridge';
+import { getBridge, type Unsubscribe } from '@teradata-pe/bridge';
 import { setupMonacoWorkers } from './monaco-setup';
 
 /**

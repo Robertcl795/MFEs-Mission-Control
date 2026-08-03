@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, type OnDestroy, type OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { getBridge, type TaskSnapshot, type ToastPayload, type Unsubscribe } from '@mission/bridge';
+import { getBridge, type OperationSnapshot, type ToastPayload, type Unsubscribe } from '@teradata-pe/bridge';
 
 interface Toast extends Required<Pick<ToastPayload, 'id' | 'intent' | 'title'>> {
   message?: string;
@@ -8,8 +8,8 @@ interface Toast extends Required<Pick<ToastPayload, 'id' | 'intent' | 'title'>> 
 }
 
 /**
- * Global notifications — a SHELL concern. Task lifecycle events arrive on
- * the bridge EventBus no matter which remote started the task or which one
+ * Global notifications — a SHELL concern. Operation lifecycle events arrive on
+ * the bridge EventBus no matter which remote started the operation or which one
  * is on screen. Clicking a toast deep-links to the (already cached) result.
  */
 @Component({
@@ -48,8 +48,8 @@ export class ToastCenterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const { bus } = getBridge();
     this.subs.push(
-      bus.on('task:completed', (task) => this.pushTask(task, 'success')),
-      bus.on('task:failed', (task) => this.pushTask(task, 'error')),
+      bus.on('operation:completed', (operation) => this.pushOperation(operation, 'success')),
+      bus.on('operation:failed', (operation) => this.pushOperation(operation, 'error')),
       bus.on('toast:show', (payload) =>
         this.push({
           id: payload.id ?? `toast-${++this.seq}`,
@@ -66,13 +66,13 @@ export class ToastCenterComponent implements OnInit, OnDestroy {
     this.subs.forEach((off) => off());
   }
 
-  private pushTask(task: TaskSnapshot, intent: 'success' | 'error'): void {
+  private pushOperation(operation: OperationSnapshot, intent: 'success' | 'error'): void {
     this.push({
-      id: `task-${task.id}-${intent}`,
+      id: `operation-${operation.id}-${intent}`,
       intent,
-      title: intent === 'success' ? `${task.title} — completed` : `${task.title} — failed`,
-      message: intent === 'success' ? task.message : task.error,
-      route: intent === 'success' ? task.resultRoute : undefined,
+      title: intent === 'success' ? `${operation.title} — completed` : `${operation.title} — failed`,
+      message: intent === 'success' ? operation.message : operation.error,
+      route: intent === 'success' ? operation.resultRoute : undefined,
     });
   }
 
