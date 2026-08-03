@@ -1,4 +1,4 @@
-# UP Mission Control — polyrepo workspace
+# MFEs Platform POC — polyrepo workspace
 
 This repo holds **no application source**. It is an umbrella: a manifest of
 independently owned repositories, plus enough tooling to check them out and
@@ -21,6 +21,24 @@ That rule is what rules out the obvious alternatives. Submodules would push a
 parent SHA down into every member. Subtrees would end each member's history at
 the vendoring commit. Both invert the arrow.
 
+## Layout
+
+Members are checked out into their group directory, at the root:
+
+```
+platform/    the contract, the tooling, the templates — what other teams consume
+demo/        the host shell and the remotes it composes — what gets demonstrated
+legacy/      the original Mission Control monorepo, preserved
+```
+
+There is no `repos/` level above the groups. It would be a directory that
+separates nothing from nothing; the grouping already carries the information.
+Both group directories are gitignored — the umbrella tracks the manifest,
+never the members.
+
+`up-ui-shell` sits under `demo/` despite its `up-ui-` prefix. It is the
+application being demonstrated, not something another team installs.
+
 ## Quick start
 
 ```bash
@@ -36,7 +54,7 @@ git clone https://github.com/Teradata-PE/up-ui-shell.git
 cd up-ui-shell && pnpm install && pnpm test
 ```
 
-Open [`up-mission-control.code-workspace`](up-mission-control.code-workspace)
+Open [`up-platform-poc.code-workspace`](up-platform-poc.code-workspace)
 for the multi-root editor view. VS Code shows **one source-control panel per
 member**, which is deliberate: there is no such thing as committing "to the
 workspace".
@@ -55,13 +73,13 @@ workspace".
 
 Defined in [`workspace.repos.json`](workspace.repos.json). Roles:
 
-| Role | Repos | Note |
-| --- | --- | --- |
-| contract | `up-ui-bridge` | Depends on nothing. Everything depends on it |
-| tooling | `up-ui-seal-cli` | Scaffolder, standards engine, drift report |
-| host | `up-ui-shell` | The Angular zoneless shell — the app in the demo |
-| template | `up-ui-{react,angular,svelte}-template` | Scaffolder inputs |
-| remote | `demo-remote-*` | Generated fixtures, ports 4201–4207 |
+| Group | Role | Repos | Note |
+| --- | --- | --- | --- |
+| platform | contract | `up-ui-bridge` | Depends on nothing. Everything depends on it |
+| platform | tooling | `up-ui-seal-cli` | Scaffolder, standards engine, drift report |
+| platform | template | `up-ui-{react,angular,svelte}-template` | Scaffolder inputs |
+| demo | host | `up-ui-shell` | The Angular zoneless shell — the app in the demo |
+| demo | remote | `demo-remote-*` | Generated fixtures, ports 4201–4207 |
 
 **Six of the eleven members have no remote.** Five are scaffolder-generated
 demo fixtures that were never meant to be published; one is `up-ui-bridge`,
@@ -70,11 +88,16 @@ this rather than hiding it, because it is the concrete reason this is a
 manifest and not a submodule tree — a submodule needs a URL and these have
 none.
 
-## Known inconsistency
+## The remote still says Mission Control
 
-`up-ui-*` members are on `main`; `demo-remote-*` are on `master`. `ws.mjs
-status` prints the branch per member so this stays visible instead of
-surfacing later as a CI default-branch failure.
+`origin` is `github.com/Robertcl795/MFEs-Mission-Control.git`. The local
+directory was renamed; the GitHub repository was not, because renaming a shared
+remote breaks `origin` for every existing clone. Rename it deliberately, or
+clone into an explicit directory:
+
+```bash
+git clone git@github.com:Robertcl795/MFEs-Mission-Control.git MFEs-Platform-POC
+```
 
 ## Running the demo
 

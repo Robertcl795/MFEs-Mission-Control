@@ -9,6 +9,11 @@
  * own). A manifest keeps the dependency pointing one way — the umbrella knows
  * the members, the members never know the umbrella.
  *
+ * Members land in their group directory at the repo root — `platform/` for
+ * what other teams consume, `demo/` for what is being demonstrated. There is
+ * deliberately no `repos/` level above them: it would carry no information
+ * the group directories do not already carry.
+ *
  * Usage:
  *   node scripts/ws.mjs clone [name...]   clone members (all, or the named)
  *   node scripts/ws.mjs adopt <dir>       symlink members already on disk
@@ -26,7 +31,17 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const manifest = JSON.parse(
   readFileSync(join(ROOT, 'workspace.repos.json'), 'utf8'),
 );
-const CHECKOUT = join(ROOT, manifest.checkoutDir);
+
+const GROUPS = Object.keys(manifest.groups).filter((k) => k !== '//');
+
+for (const repo of manifest.repos) {
+  if (!GROUPS.includes(repo.group)) {
+    console.error(
+      `${repo.name}: group "${repo.group}" is not one of ${GROUPS.join(', ')}`,
+    );
+    process.exit(1);
+  }
+}
 
 const C = {
   dim: (s) => `\x1b[2m${s}\x1b[0m`,
@@ -36,7 +51,7 @@ const C = {
   bold: (s) => `\x1b[1m${s}\x1b[0m`,
 };
 
-const pathOf = (repo) => join(CHECKOUT, repo.name);
+const pathOf = (repo) => join(ROOT, repo.group, repo.name);
 const present = (repo) => existsSync(join(pathOf(repo), '.git'));
 
 function urlOf(repo) {
@@ -80,6 +95,7 @@ function cmdClone(names) {
       continue;
     }
     console.log(`  ${C.green('clone')}    ${repo.name}  ${C.dim(url)}`);
+    mkdirSync(dirname(dest), { recursive: true });
     const res = spawnSync('git', ['clone', url, dest], { stdio: 'inherit' });
     if (res.status !== 0) {
       console.error(C.red(`  failed: ${repo.name}`));
@@ -98,7 +114,7 @@ function cmdAdopt(args) {
     process.exit(1);
   }
   const from = resolve(process.cwd(), source);
-  mkdirSync(CHECKOUT, { recursive: true });
+  for (const g of GROUPS) mkdirSync(join(ROOT, g), { recursive: true });
   let linked = 0;
   for (const repo of manifest.repos) {
     const target = join(from, repo.name);
@@ -118,24 +134,27 @@ function cmdAdopt(args) {
 }
 
 function cmdStatus() {
-  for (const repo of manifest.repos) {
-    if (!present(repo)) {
-      console.log(`  ${C.dim('absent')}   ${repo.name}`);
-      continue;
+  for (const group of GROUPS) {
+    console.log(C.bold(`\n${group}/`));
+    for (const repo of manifest.repos.filter((r) => r.group === group)) {
+      if (!present(repo)) {
+        console.log(`  ${C.dim('absent')}   ${repo.name}`);
+        continue;
+      }
+      const at = pathOf(repo);
+      const branch = execFileSync('git', ['branch', '--show-current'], {
+        cwd: at,
+        encoding: 'utf8',
+      }).trim();
+      const dirty = execFileSync('git', ['status', '--porcelain'], {
+        cwd: at,
+        encoding: 'utf8',
+      })
+        .split('\n')
+        .filter(Boolean).length;
+      const mark = dirty ? C.yellow(`${dirty} dirty`) : C.green('clean');
+      console.log(`  ${repo.name.padEnd(24)} ${branch.padEnd(12)} ${mark}`);
     }
-    const at = pathOf(repo);
-    const branch = execFileSync('git', ['branch', '--show-current'], {
-      cwd: at,
-      encoding: 'utf8',
-    }).trim();
-    const dirty = execFileSync('git', ['status', '--porcelain'], {
-      cwd: at,
-      encoding: 'utf8',
-    })
-      .split('\n')
-      .filter(Boolean).length;
-    const mark = dirty ? C.yellow(`${dirty} dirty`) : C.green('clean');
-    console.log(`  ${repo.name.padEnd(24)} ${branch.padEnd(12)} ${mark}`);
   }
 }
 
@@ -165,6 +184,11 @@ function cmdDoctor() {
   const missing = manifest.repos.filter((r) => !present(r));
   const local = manifest.repos.filter((r) => r.local);
   console.log(`\nmembers   ${manifest.repos.length}`);
+  for (const g of GROUPS) {
+    const inGroup = manifest.repos.filter((r) => r.group === g);
+    const here = inGroup.filter(present).length;
+    console.log(`  ${g.padEnd(9)} ${here}/${inGroup.length} present`);
+  }
   console.log(`present   ${manifest.repos.length - missing.length}`);
   console.log(`absent    ${missing.length}`);
   if (missing.length) {
@@ -203,11 +227,17 @@ switch (cmd) {
   case 'doctor':
     cmdDoctor();
     break;
-  default:
-    console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8')
-      .split('\n')
-      .slice(1, 20)
-      .map((l) => l.replace(/^ \* ?/, '').replace(/^\/\*\*?/, ''))
-      .join('\n'));
+  default: {
+    const lines = readFileSync(fileURLToPath(import.meta.url), 'utf8').split(
+      '\n',
+    );
+    const end = lines.findIndex((l) => l.trim() === '*/');
+    console.log(
+      lines
+        .slice(1, end)
+        .map((l) => l.replace(/^ \* ?/, '').replace(/^\/\*\*?/, ''))
+        .join('\n'),
+    );
     process.exit(cmd ? 1 : 0);
+  }
 }

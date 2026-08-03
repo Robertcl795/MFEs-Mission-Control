@@ -1,5 +1,5 @@
-repos/
-node_modules/
+/platform/
+/demo/
 node_modules/
 dist/
 .angular/

@@ -1,5 +1,5 @@
 {
-  "name": "up-mission-control-workspace",
+  "name": "mfes-platform-poc-workspace",
   "version": "1.0.0",
   "private": true,
   "description": "Polyrepo umbrella for the UP micro-frontend platform. Holds no source of its own — see workspace.repos.json.",
