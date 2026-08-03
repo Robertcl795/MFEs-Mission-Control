@@ -1,51 +1,86 @@
-# Mission Control
+# UP Mission Control — polyrepo workspace
 
-A micro-frontend proof of concept built for the agentic era: **Module Federation 2.0** on **Rsbuild/Rspack**, a polyglot host/remote topology (Angular ⇄ React), and a single framework-agnostic contract package that makes the whole system legible — to humans and to AI agents.
+This repo holds **no application source**. It is an umbrella: a manifest of
+independently owned repositories, plus enough tooling to check them out and
+operate on them as a set.
 
-| App | Framework | Port | Role |
-| --- | --- | --- | --- |
-| `shell` | Angular 20 | 4200 | **Host.** Owns the bridge (session, theme, cache, tasks, events), layout, routing, global toasts. No feature logic. |
-| `analytics` | React 19 | 4201 | **Remote.** Monaco-powered SQL query workbench. Exposes `./mount`. |
-| `reports` | Angular 20 | 4203 | **Remote.** Monaco JSON/log viewer + long-running report generation. Exposes `./routes`. |
-| `playground` | Svelte 5 | 4204 | **Remote.** Monaco CSS/HTML editor + sanitized live canvas (DOMPurify + CSS filter, shadow DOM). Exposes `./mount`. |
+The original Mission Control POC that used to live here — four apps and a
+bridge package in one pnpm monorepo — is preserved under [`legacy/`](legacy/).
+Its bridge is the direct ancestor of `up-ui-bridge`, and it is still the only
+place where cross-remote task tracking, global state and cross-remote routing
+were ever implemented. See [`NEXT_STEPS.md`](../up-platform-poc/NEXT_STEPS.md).
 
-| Package | Purpose |
-| --- | --- |
-| `@teradata-pe/bridge` | Framework-agnostic contracts: EventBus, AuthSession, ThemeChannel, SharedDataCache, AsyncOperationManager, route validators, HTTP interceptors. |
-| `@mission/tokens` | CSS custom properties (`--mc-*`) driven by `html[data-theme]`. |
-| `create-mission-remote` | Legacy scaffolding CLI retained for the lab; new projects use `seal scaffold` and consume `@teradata-pe/bridge`. See [packages/create-mission-remote](./packages/create-mission-remote). |
+## The one rule
+
+**A member repo never knows this workspace exists.** You can clone
+`up-ui-shell` on its own, run its tests, and ship it, with no awareness of the
+umbrella. The dependency points one way only: the manifest knows the members;
+the members know nothing.
+
+That rule is what rules out the obvious alternatives. Submodules would push a
+parent SHA down into every member. Subtrees would end each member's history at
+the vendoring commit. Both invert the arrow.
 
 ## Quick start
 
 ```bash
-pnpm install
-pnpm dev               # compiles @teradata-pe/bridge, then starts shell (4200), analytics (4201), reports (4203), playground (4204)
+# everything
+node scripts/ws.mjs clone
+node scripts/ws.mjs status
+
+# already have the repos on disk? link them instead of re-cloning
+node scripts/ws.mjs adopt ../up-platform-poc
+
+# one repo, standalone — no workspace involved at all
+git clone https://github.com/Teradata-PE/up-ui-shell.git
+cd up-ui-shell && pnpm install && pnpm test
 ```
 
-Open **http://localhost:4200**. Each remote also runs standalone (`http://localhost:4201`, `4203`, `4204`) with a local dev bridge, honouring the exact same contracts. When starting a single app on its own (`pnpm --filter <app> dev`), run `pnpm build:contracts` once first — apps consume the bridge's compiled `dist`.
+Open [`up-mission-control.code-workspace`](up-mission-control.code-workspace)
+for the multi-root editor view. VS Code shows **one source-control panel per
+member**, which is deliberate: there is no such thing as committing "to the
+workspace".
 
-`pnpm build` produces production bundles for every app (`apps/*/dist`), including each remote's `mf-manifest.json`.
+## Commands
 
-## The five demos
+| Command | What it does |
+| --- | --- |
+| `ws.mjs clone [name...]` | Clone members. Local-only members are reported, not failed |
+| `ws.mjs adopt <dir>` | Symlink members that already exist on disk |
+| `ws.mjs status` | Branch and dirty count per member |
+| `ws.mjs run <cmd...>` | Run one command in every present member |
+| `ws.mjs doctor` | Present / absent / local-only, with reasons |
 
-1. **Cross-remote cache (SWR).** Reports → *Data viewer* fetches `fleet-data` (~1.2s mock network). Then Analytics → *Run query*: served from the shared `SharedDataCache` in single-digit ms — one network request for the whole federation, in-flight requests deduped.
-2. **Persistent operations.** Reports → *Generate* starts a report job in the **host-owned** `AsyncOperationManager`, then navigate to Analytics mid-run. Polling keeps going; the shell raises a clickable toast on completion that deep-links to the result — served instantly from the cache.
-3. **Global theme.** The header toggle flips `data-theme` on `<html>`; both remotes subscribe to the bridge `ThemeChannel` and every Monaco editor (React *and* Angular) switches `vs` ⇄ `vs-dark` — they share one federated `monaco-editor` singleton (`^0.52.0`).
-4. **Shared route protection.** `requirePermission('admin')` from `@teradata-pe/bridge` guards `/reports/admin` (Angular `CanActivateFn` adapter) *and* `/analytics/admin` (React component adapter). Toggle `admin` in the header and watch both react live.
-5. **Sanitized design canvas.** Playground (Svelte 5) edits two documents — `index.html` and `styles.css` — in ONE Monaco instance that swaps models (and syntax highlighting) per file. Every keystroke passes through DOMPurify + a CSS filter before rendering into a shadow-DOM canvas; try typing a `<script>` tag and watch the sanitizer counter. "Insert fleet table" reuses the same `fleet-data` cache entry as the other remotes — still one network request federation-wide.
-6. **BEM, two flavours.** The playground remote doubles as a commented BEM showcase: its own chrome is SCSS BEM ([`apps/playground/src/styles.scss`](./apps/playground/src/styles.scss) — `&__element` / `&--modifier` nesting that compiles to flat single-class selectors), and the canvas's default documents demo the same grammar in **vanilla CSS**, live-editable in Monaco. In an MFE the convention earns its keep twice: the `pg-` block namespace makes cross-remote class collisions impossible, and flat (0,1,0) specificity means no remote ever needs `!important` to win. Type a `<script>` tag and watch the `pg-canvas__note--alert` state modifier flip on.
+## Members
 
-## Architectural rules
+Defined in [`workspace.repos.json`](workspace.repos.json). Roles:
 
-1. **Remotes never import from other remotes.** All cross-communication goes through `@teradata-pe/bridge`.
-2. **Contracts first.** If a rule isn't in `@teradata-pe/bridge` or an `mf-manifest.json`, it doesn't exist.
-3. **The host is a shell.** Contracts, layout, global state, notifications — no heavy features.
-4. **No duplicated shared concerns.** Auth, theming, caching and task orchestration live once, in the host, behind bridge interfaces.
+| Role | Repos | Note |
+| --- | --- | --- |
+| contract | `up-ui-bridge` | Depends on nothing. Everything depends on it |
+| tooling | `up-ui-seal-cli` | Scaffolder, standards engine, drift report |
+| host | `up-ui-shell` | The Angular zoneless shell — the app in the demo |
+| template | `up-ui-{react,angular,svelte}-template` | Scaffolder inputs |
+| remote | `demo-remote-*` | Generated fixtures, ports 4201–4207 |
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for contract-level detail, the federation graph, and the design decisions (async boundaries, Monaco workers, cross-framework routing).
+**Six of the eleven members have no remote.** Five are scaffolder-generated
+demo fixtures that were never meant to be published; one is `up-ui-bridge`,
+which is blocked on INC-016 (target org unresolved). `ws.mjs doctor` prints
+this rather than hiding it, because it is the concrete reason this is a
+manifest and not a submodule tree — a submodule needs a URL and these have
+none.
 
-## Verification
+## Known inconsistency
 
-The POC was verified end-to-end with headless-Chromium check scripts driven from `platform-poc/demo` — remote mounting across three frameworks, cache dedupe, Monaco theme propagation, CSS/HTML model switching, live script-injection stripping, guard allow/deny, task persistence + toast deep-link, registry resolution and the kill-switch. There is **no committed Playwright suite in this repository**; the automated test stack for the extracted repos is defined in ADR-017 (Vitest, MSW, axe, bridge contract tests).
+`up-ui-*` members are on `main`; `demo-remote-*` are on `master`. `ws.mjs
+status` prints the branch per member so this stays visible instead of
+surfacing later as a CI default-branch failure.
 
-> **Why Svelte and not SvelteKit?** SvelteKit is bound to Vite and SSR-oriented routing, so it cannot join an Rspack/Rsbuild Module Federation build. The `playground` remote follows this repo's architecture instead: Svelte 5 compiled by Rsbuild, federated with the same `mount` contract as the React remote.
+## Running the demo
+
+The demo stack is driven from `platform-poc`, not from here:
+
+```bash
+pnpm demo        # make -C ../platform-poc run
+pnpm demo:down
+```

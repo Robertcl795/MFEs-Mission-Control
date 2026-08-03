@@ -1,0 +1,32 @@
+{
+  "//": "Multi-root editor view over the polyrepo. Each folder is an independent git repo; VS Code shows one source-control panel per folder, which is the point — you commit to a member, never to 'the workspace'. Regenerate after `ws.mjs clone`/`adopt` if the member set changes.",
+  "folders": [
+    { "name": "◆ workspace", "path": "." },
+    { "name": "contract · up-ui-bridge", "path": "repos/up-ui-bridge" },
+    { "name": "tooling · up-ui-seal-cli", "path": "repos/up-ui-seal-cli" },
+    { "name": "host · up-ui-shell", "path": "repos/up-ui-shell" },
+    { "name": "template · react", "path": "repos/up-ui-react-template" },
+    { "name": "template · angular", "path": "repos/up-ui-angular-template" },
+    { "name": "template · svelte", "path": "repos/up-ui-svelte-template" },
+    { "name": "remote · react (4201)", "path": "repos/demo-remote-react" },
+    { "name": "remote · angular (4203)", "path": "repos/demo-remote-angular" },
+    { "name": "remote · monaco (4205)", "path": "repos/demo-remote-monaco" },
+    { "name": "remote · orders (4207)", "path": "repos/demo-remote-orders" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/.rsbuild": true,
+      "**/@mf-types": true
+    },
+    "search.exclude": {
+      "repos/*/node_modules": true,
+      "legacy/**": true
+    },
+    "typescript.tsdk": "repos/up-ui-shell/node_modules/typescript/lib"
+  },
+  "extensions": {
+    "recommendations": ["biomejs.biome", "angular.ng-template"]
+  }
+}

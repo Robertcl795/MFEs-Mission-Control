@@ -1,27 +1,19 @@
 {
-  "name": "mission-control",
-  "version": "0.1.0",
+  "name": "up-mission-control-workspace",
+  "version": "1.0.0",
   "private": true,
-  "description": "Mission Control \u2014 a Module Federation 2.0 + Rsbuild micro-frontend POC built for the agentic era",
+  "description": "Polyrepo umbrella for the UP micro-frontend platform. Holds no source of its own — see workspace.repos.json.",
+  "type": "module",
   "scripts": {
-    "build": "pnpm -r build",
-    "build:contracts": "pnpm --filter @teradata-pe/bridge build",
-    "dev": "pnpm build:contracts && pnpm -r --parallel --stream dev",
-    "typecheck": "pnpm -r typecheck"
+    "ws": "node scripts/ws.mjs",
+    "clone": "node scripts/ws.mjs clone",
+    "status": "node scripts/ws.mjs status",
+    "doctor": "node scripts/ws.mjs doctor",
+    "demo": "make -C ../platform-poc run",
+    "demo:down": "make -C ../platform-poc down"
   },
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@10.33.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@nx/angular-rspack-compiler",
-      "@parcel/watcher",
-      "core-js",
-      "esbuild",
-      "lmdb",
-      "msgpackr-extract",
-      "sass-embedded"
-    ]
-  }
+  "packageManager": "pnpm@10.33.0"
 }
